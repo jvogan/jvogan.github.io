@@ -1,0 +1,30 @@
+# Jacob Vogan
+
+> Bio × AI. Builds AI tools for biological research — agentic systems for bioinformatics, structural biology, biomanufacturing, and automated labs.
+
+The aim is to speed the pace of research so people can live healthier, longer lives. Also other useful AI tools, like local text-to-speech, transcription, and planning long-horizon agentic work on neoclouds.
+
+## About
+
+- Name: Jacob Vogan
+- Profile: https://github.com/jvogan
+- Site: https://jvogan.github.io/
+- Stack: Claude Code, Codex, Gemini, Gemma, GPT-OSS
+
+## Featured projects
+
+### BioSymphony — OpenAI Symphony + Linear orchestration for long-horizon agent work
+- [symphony-linear-starter](https://github.com/jvogan/symphony-linear-starter) — Self-improving starter skill / operator toolkit for Codex or Claude Code as orchestrator over Symphony workers + Linear.
+- [symphony-claude-lane](https://github.com/jvogan/symphony-claude-lane) — Portable skill for adding a Claude Code lane to OpenAI Symphony + Linear workflows.
+- [runpod-bridge](https://github.com/jvogan/runpod-bridge) — RunPod guardrails for OpenAI Symphony + Linear agents: Codex/Claude Code workers, manifests, artifact proof, cleanup.
+
+### BioTools — bioinformatics, structural biology, lab tooling
+- [biovoice](https://github.com/jvogan/biovoice) — Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.
+- [proteus](https://github.com/jvogan/proteus) — Structural biology superpowers for AI coding agents: PyMOL, ChimeraX, AlphaFold DB, RCSB PDB, UniProt, and Rosetta workflows.
+
+### Agent Skills & Local AI — agent skills, local speech, dev infra
+- [ai-chatbot-daneel](https://github.com/jvogan/ai-chatbot-daneel) — Skill that scaffolds a safe, multi-model chatbot for Telegram or Discord. Claude, GPT, Gemini, and OpenAI-compatible backends. Nine safety layers on by default.
+- [Valar](https://github.com/jvogan/Valar) — Local speech stack for Apple Silicon: TTS, ASR, forced alignment, voices, daemon, and MCP bridge.
+- [telegram-codex-bridge](https://github.com/jvogan/telegram-codex-bridge) — Local-first bridge: OpenAI Codex Desktop ↔ Telegram bot. Text, files, voice notes, and optional realtime calls.
+- [whisper-hud](https://github.com/jvogan/whisper-hud) — System-wide voice-to-text for macOS. Hold a hotkey, speak, text appears at your cursor. OpenAI / Gemini / Apple Speech / local — bring your own keys.
+- [yt-agent](https://github.com/jvogan/yt-agent) — AI Agent Tool for terminal-first YouTube search, download, catalog, and clip tooling on yt-dlp.
