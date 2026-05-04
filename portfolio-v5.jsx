@@ -168,7 +168,7 @@ function ProjectCard({ project }) {
   // Self-hosted social preview to avoid GitHub's 100/hour rate limit on
   // opengraph.githubassets.com. If the local file is missing, fall back
   // to the live URL on error.
-  const localOg = `media/social-previews/${project.name}.png`;
+  const localOg = `media/social-previews/${project.name}.webp`;
   const liveOg = `https://opengraph.githubassets.com/${OG_PREFIX}-${project.name}/${GITHUB_USER}/${project.name}`;
   const onImgError = (e) => {
     if (e.currentTarget.dataset.fallback !== "1") {

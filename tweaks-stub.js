@@ -1,0 +1,1 @@
+function useTweaks(n){return[n,()=>{}]}function TweaksPanel(){return null}function TweakSection(){return null}function TweakRadio(){return null}Object.assign(window,{useTweaks,TweaksPanel,TweakSection,TweakRadio});
