@@ -226,6 +226,7 @@ function App() {
 
   const { projects, status } = useProjects();
   const timestamp = useTimestamp();
+  const isDesktop = useIsDesktop();
 
   const style = useMemo(() => ({ "--red": accent, "--red-deep": accent }), [accent]);
 
@@ -252,29 +253,31 @@ function App() {
               Jacob<br />
               <span className="red">Vogan</span>
             </h1>
-            <figure className="hero-video-figure">
-              <a
-                className="hero-video"
-                href="https://github.com/jvogan"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Pixel-art loop: Jacob and his AI agents — Claude as a crab, Codex as a drone — fighting off pathogens, disease, and monstrous threats inside a research lab."
-              >
-                <video
-                  src="media/lab-runner.mp4"
-                  poster="media/lab-runner-poster.jpg"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  aria-hidden="true"
-                />
-              </a>
-              <figcaption className="hero-video-caption">
-                Lab Runner · J.V. + Claude <span className="muted">(crab)</span> + Codex <span className="muted">(drone)</span> vs. pathogens.
-              </figcaption>
-            </figure>
+            {isDesktop && (
+              <figure className="hero-video-figure">
+                <a
+                  className="hero-video"
+                  href="https://github.com/jvogan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Pixel-art loop: Jacob and his AI agents — Claude as a crab, Codex as a drone — fighting off pathogens, disease, and monstrous threats inside a research lab."
+                >
+                  <video
+                    src="media/lab-runner.mp4"
+                    poster="media/lab-runner-poster.jpg"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-hidden="true"
+                  />
+                </a>
+                <figcaption className="hero-video-caption">
+                  Lab Runner · J.V. + Claude <span className="muted">(crab)</span> + Codex <span className="muted">(drone)</span> vs. pathogens.
+                </figcaption>
+              </figure>
+            )}
           </div>
 
           <div className="hero-jp"><span className="jp" lang="ja">生命の特異点</span> ／ <span lang="la">Singularitas biologica</span></div>
@@ -412,6 +415,22 @@ function usePrefersReducedMotion() {
     return () => mq.removeEventListener?.("change", on);
   }, []);
   return reduced;
+}
+
+// Default false so mobile-first SSR/initial paint never includes the video
+// element (and never triggers the 1.8 MB MP4 fetch on phones). The effect
+// flips it true on desktop after hydration.
+function useIsDesktop() {
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(min-width: 821px)");
+    setIsDesktop(mq.matches);
+    const on = (e) => setIsDesktop(e.matches);
+    mq.addEventListener?.("change", on);
+    return () => mq.removeEventListener?.("change", on);
+  }, []);
+  return isDesktop;
 }
 
 function useTimestamp() {
