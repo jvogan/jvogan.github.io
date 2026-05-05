@@ -300,7 +300,7 @@ body::before {
 
 @media (max-width: 820px) {
   .hero-top { grid-template-columns: 1fr; gap: 28px; align-items: stretch; }
-  .hero-video-figure { margin-bottom: 0; }
+  .hero-video-figure { display: none; }
 }
 
 /* Japanese / Latin transliteration subtitle */
