@@ -15,8 +15,8 @@ const PROJECT_GROUPS = [
     key: "biosymphony",
     title: "BioSymphony",
     jp: "交響曲",
-    blurb: "OpenAI Symphony + Linear · long-horizon orchestration",
-    repos: ["symphony-linear-starter", "symphony-claude-lane", "runpod-bridge"],
+    blurb: "Agentic harnesses for biology · long-horizon orchestration",
+    repos: ["biosymphony-ferm-doe", "symphony-linear-starter", "symphony-claude-lane", "runpod-bridge"],
   },
   {
     key: "biotools",
@@ -36,7 +36,13 @@ const PROJECT_GROUPS = [
 
 // Hand-curated fallback content used only if the GitHub API fails or rate-limits.
 // Live API data takes precedence when available.
+// Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "biosymphony-ferm-doe": {
+    blurb: "Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale bridging, biosafety-aware.",
+    tags: ["Python", "fermentation", "biosafety"],
+    owner: "BioSymphony",
+  },
   "symphony-linear-starter": {
     blurb: "Self-improving starter skill / operator toolkit for Codex or Claude Code as orchestrator over Symphony workers + Linear.",
     tags: ["Python", "ai-agents", "claude-code"],
@@ -88,17 +94,20 @@ function repoToProject(repo) {
     blurb: repo.description || "// no transmission log",
     tags: tags.length ? tags : ["REPO"],
     href: repo.html_url,
+    owner: repo.owner?.login || GITHUB_USER,
   };
 }
 
 function projectFromFallback(name) {
   const fb = FALLBACK_DETAILS[name];
   if (!fb) return null;
+  const owner = fb.owner || GITHUB_USER;
   return {
     name,
     blurb: fb.blurb,
     tags: fb.tags,
-    href: `https://github.com/${GITHUB_USER}/${name}`,
+    href: `https://github.com/${owner}/${name}`,
+    owner,
   };
 }
 
@@ -127,17 +136,27 @@ function flattenGroups(groups) {
 }
 
 async function fetchRepoMap() {
-  const res = await fetch(
+  const sources = [
     `https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`,
-    { headers: { Accept: "application/vnd.github+json" } }
-  );
-  if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-  const data = await res.json();
+    `https://api.github.com/orgs/BioSymphony/repos?per_page=100&sort=updated`,
+  ];
   const map = {};
-  for (const repo of data) {
-    if (repo.fork || repo.archived) continue;
-    map[repo.name] = repoToProject(repo);
+  let anyOk = false;
+  for (const url of sources) {
+    try {
+      const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
+      if (!res.ok) continue;
+      anyOk = true;
+      const data = await res.json();
+      for (const repo of data) {
+        if (repo.fork || repo.archived) continue;
+        if (!map[repo.name]) map[repo.name] = repoToProject(repo);
+      }
+    } catch (_) {
+      // ignore; fall through to fallback content
+    }
   }
+  if (!anyOk) throw new Error("GitHub API unreachable");
   return map;
 }
 
@@ -169,7 +188,8 @@ function ProjectCard({ project }) {
   // opengraph.githubassets.com. If the local file is missing, fall back
   // to the live URL on error.
   const localOg = `media/social-previews/${project.name}.webp`;
-  const liveOg = `https://opengraph.githubassets.com/${OG_PREFIX}-${project.name}/${GITHUB_USER}/${project.name}`;
+  const ogOwner = project.owner || GITHUB_USER;
+  const liveOg = `https://opengraph.githubassets.com/${OG_PREFIX}-${project.name}/${ogOwner}/${project.name}`;
   const onImgError = (e) => {
     if (e.currentTarget.dataset.fallback !== "1") {
       e.currentTarget.dataset.fallback = "1";
