@@ -12,11 +12,18 @@ const OG_PREFIX = `${GITHUB_USER}-portfolio`;
 // Any public repo NOT listed here is hidden, even if returned by the API.
 const PROJECT_GROUPS = [
   {
+    key: "orchestration",
+    title: "Orchestration",
+    jp: "指揮",
+    blurb: "Agent orchestration · Symphony · Linear · RunPod",
+    repos: ["symphony-linear-starter", "symphony-claude-lane", "runpod-bridge", "telegram-codex-bridge"],
+  },
+  {
     key: "biosymphony",
     title: "BioSymphony",
     jp: "交響曲",
     blurb: "Agentic harnesses for biology · long-horizon orchestration",
-    repos: ["biosymphony-ferm-doe", "symphony-linear-starter", "symphony-claude-lane", "runpod-bridge"],
+    repos: ["biosymphony-ferm-doe"],
   },
   {
     key: "biotools",
@@ -30,7 +37,7 @@ const PROJECT_GROUPS = [
     title: "Agent Skills & Local AI",
     jp: "道具",
     blurb: "Agent skills, local speech, dev infra",
-    repos: ["ai-chatbot-daneel", "Valar", "telegram-codex-bridge", "whisper-hud", "yt-agent"],
+    repos: ["ai-chatbot-daneel", "Valar", "whisper-hud", "yt-agent"],
   },
 ];
 
