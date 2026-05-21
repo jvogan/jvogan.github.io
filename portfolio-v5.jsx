@@ -322,16 +322,16 @@ function App() {
           <div className="hero-body">
             <div>
               <p className="hero-bio">
-                <strong>Bio × AI.</strong> Building AI tools to help biological
-                research, including agentic systems for bioinformatics,
-                structural biology, biomanufacturing, and automated labs.
-                The aim is to speed the pace of research so people can live
-                healthier, longer lives.
+                <strong>Bio × AI.</strong> Building AI tools for life
+                science research, including agentic systems for
+                bioinformatics, structural biology, biomanufacturing, and
+                automated labs. AI progress will ideally speed up the pace
+                of research so people can live healthier, longer lives.
               </p>
               <p className="hero-bio hero-bio-secondary">
-                Also other useful AI tools, like local text-to-speech,
-                transcription, and planning long-horizon agentic work on
-                neoclouds.
+                Shared repos include harnesses for long-running multi-agent
+                work, molecular biology suite tools for researchers, and
+                general-purpose AI agent skills.
               </p>
               <div className="hero-meta">
                 <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
