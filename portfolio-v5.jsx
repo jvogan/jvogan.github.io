@@ -102,6 +102,7 @@ function repoToProject(repo) {
     tags: tags.length ? tags : ["REPO"],
     href: repo.html_url,
     owner: repo.owner?.login || GITHUB_USER,
+    createdAt: repo.created_at,
   };
 }
 
@@ -142,6 +143,15 @@ function flattenGroups(groups) {
   return groups.flatMap((g) => g.projects);
 }
 
+// Newest repos first. Fallback rows have no createdAt and stay in PROJECT_GROUPS order.
+function sortByCreated(projects) {
+  return [...projects].sort((a, b) => {
+    const ta = a.createdAt ? Date.parse(a.createdAt) : 0;
+    const tb = b.createdAt ? Date.parse(b.createdAt) : 0;
+    return tb - ta;
+  });
+}
+
 async function fetchRepoMap() {
   const sources = [
     `https://api.github.com/users/${GITHUB_USER}/repos?per_page=100&sort=updated`,
@@ -174,7 +184,7 @@ function useProjects() {
     fetchRepoMap()
       .then((repoMap) => {
         if (cancelled) return;
-        const projects = flattenGroups(buildGroups(repoMap));
+        const projects = sortByCreated(flattenGroups(buildGroups(repoMap)));
         setState({ projects, status: projects.length ? "live" : "fallback" });
       })
       .catch(() => {
