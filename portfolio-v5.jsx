@@ -23,7 +23,13 @@ const PROJECT_GROUPS = [
     title: "BioSymphony",
     jp: "交響曲",
     blurb: "Agentic harnesses for biology · long-horizon orchestration",
-    repos: ["biosymphony-ferm-doe"],
+    repos: [
+      "biosymphony-structure-factory-public",
+      "biosymphony-bioprospector",
+      "biosymphony-genecluster",
+      "biosymphony-cryocore-public",
+      "biosymphony-ferm-doe",
+    ],
   },
   {
     key: "biotools",
@@ -45,6 +51,26 @@ const PROJECT_GROUPS = [
 // Live API data takes precedence when available.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "biosymphony-structure-factory-public": {
+    blurb: "AI-agent toolkit for structural biology: design binders, map structures, screen candidates, rank results, and prepare cloud-scale runs.",
+    tags: ["Python", "structural-biology", "binders"],
+    owner: "BioSymphony",
+  },
+  "biosymphony-bioprospector": {
+    blurb: "Biosynthetic route exploration for target molecules: find enzyme and gene candidates and turn pathway ideas into follow-up searches and experiments.",
+    tags: ["Python", "biosynthesis", "enzymes"],
+    owner: "BioSymphony",
+  },
+  "biosymphony-genecluster": {
+    blurb: "Genome-mining workflows for natural products: search public genomes and transcriptomes, compare candidate clusters, and plan follow-up work.",
+    tags: ["Python", "genome-mining", "natural-products"],
+    owner: "BioSymphony",
+  },
+  "biosymphony-cryocore-public": {
+    blurb: "Cryo-EM workflows for maps, models, figures, state comparison, and local or cloud compute preparation.",
+    tags: ["Python", "cryo-em", "structural-biology"],
+    owner: "BioSymphony",
+  },
   "biosymphony-ferm-doe": {
     blurb: "Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale bridging, biosafety-aware.",
     tags: ["Python", "fermentation", "biosafety"],
