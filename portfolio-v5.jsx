@@ -253,7 +253,7 @@ function ProjectCard({ project }) {
         <img className="card-og" src={localOg} onError={onImgError} alt="" loading="lazy" decoding="async" />
       </div>
       <div className="card-body">
-        <h3 className="card-title">{project.name}</h3>
+        <h3 className="card-title">{project.name.replace(/-public$/, "")}</h3>
         <p className="card-blurb">{project.blurb}</p>
         <div className="card-foot">
           <div className="card-tags">
