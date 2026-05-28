@@ -24,7 +24,7 @@ const PROJECT_GROUPS = [
     jp: "交響曲",
     blurb: "Agentic harnesses for biology · long-horizon orchestration",
     repos: [
-      "biosymphony-structure-factory-public",
+      "structure-factory",
       "biosymphony-bioprospector",
       "biosymphony-genecluster",
       "biosymphony-cryocore-public",
@@ -51,7 +51,7 @@ const PROJECT_GROUPS = [
 // Live API data takes precedence when available.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
-  "biosymphony-structure-factory-public": {
+  "structure-factory": {
     blurb: "AI-agent toolkit for structural biology: design binders, map structures, screen candidates, rank results, and prepare cloud-scale runs.",
     tags: ["Python", "structural-biology", "binders"],
     owner: "BioSymphony",
