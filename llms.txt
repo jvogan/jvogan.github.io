@@ -14,7 +14,7 @@ The aim is to speed the pace of research so people can live healthier, longer li
 ## Featured projects
 
 ### BioSymphony — agentic harnesses for biology and long-horizon agent orchestration
-- [biosymphony-ferm-doe](https://github.com/BioSymphony/biosymphony-ferm-doe) — Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale-up and scale-down bridging, biosafety-aware.
+- [ferm-doe](https://github.com/BioSymphony/ferm-doe) — Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale-up and scale-down bridging, biosafety-aware.
 - [symphony-linear-starter](https://github.com/jvogan/symphony-linear-starter) — Self-improving starter skill / operator toolkit for Codex or Claude Code as orchestrator over Symphony workers + Linear.
 - [symphony-claude-lane](https://github.com/jvogan/symphony-claude-lane) — Portable skill for adding a Claude Code lane to OpenAI Symphony + Linear workflows.
 - [runpod-bridge](https://github.com/jvogan/runpod-bridge) — RunPod guardrails for OpenAI Symphony + Linear agents: Codex/Claude Code workers, manifests, artifact proof, cleanup.
