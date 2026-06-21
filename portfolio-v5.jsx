@@ -15,8 +15,8 @@ const PROJECT_GROUPS = [
     key: "orchestration",
     title: "Orchestration",
     jp: "指揮",
-    blurb: "Agent orchestration · Symphony · Linear · RunPod",
-    repos: ["symphony-linear-starter", "symphony-claude-lane", "runpod-bridge", "telegram-codex-bridge"],
+    blurb: "Agent orchestration · Symphony · Linear · cloud compute",
+    repos: ["symphony-linear-starter", "symphony-claude-lane", "symphony-neocloud-bridge", "telegram-codex-bridge"],
   },
   {
     key: "biosymphony",
@@ -24,6 +24,7 @@ const PROJECT_GROUPS = [
     jp: "交響曲",
     blurb: "Agentic harnesses for biology · long-horizon orchestration",
     repos: [
+      "small-molecules",
       "structure-factory",
       "bioprospector",
       "genecluster",
@@ -47,32 +48,43 @@ const PROJECT_GROUPS = [
   },
 ];
 
-// Hand-curated fallback content used only if the GitHub API fails or rate-limits.
-// Live API data takes precedence when available.
+// Hand-curated project copy keeps the public page clear even when the GitHub
+// API is reachable. Live API data still supplies href, owner, and timestamps.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "small-molecules": {
+    displayName: "Small Molecules",
+    blurb: "Small-molecule design workflows: choose tools, plan synthesis, dock ligands, and check ADMET.",
+    tags: ["Python", "small-molecules", "drug-discovery"],
+    owner: "BioSymphony",
+  },
   "structure-factory": {
+    displayName: "Structure Factory",
     blurb: "AI-agent toolkit for structural biology: design binders, map structures, screen candidates, rank results, and prepare cloud-scale runs.",
     tags: ["Python", "structural-biology", "binders"],
     owner: "BioSymphony",
   },
   "bioprospector": {
+    displayName: "BioProspector",
     blurb: "Biosynthetic route exploration for target molecules: find enzyme and gene candidates and turn pathway ideas into follow-up searches and experiments.",
     tags: ["Python", "biosynthesis", "enzymes"],
     owner: "BioSymphony",
   },
   "genecluster": {
+    displayName: "GeneCluster",
     blurb: "Genome-mining workflows for natural products: search public genomes and transcriptomes, compare candidate clusters, and plan follow-up work.",
     tags: ["Python", "genome-mining", "natural-products"],
     owner: "BioSymphony",
   },
   "cryocore": {
+    displayName: "CryoCore",
     blurb: "Cryo-EM workflows for maps, models, figures, state comparison, and local or cloud compute preparation.",
     tags: ["Python", "cryo-em", "structural-biology"],
     owner: "BioSymphony",
   },
   "ferm-doe": {
-    blurb: "Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale bridging, biosafety-aware.",
+    displayName: "Ferm DoE",
+    blurb: "Fermentation and biomanufacturing experiment planning: choose design families, check scale context, and prepare run packets.",
     tags: ["Python", "fermentation", "biosafety"],
     owner: "BioSymphony",
   },
@@ -84,9 +96,10 @@ const FALLBACK_DETAILS = {
     blurb: "Portable skill for adding a Claude Code lane to OpenAI Symphony + Linear workflows.",
     tags: ["Shell", "agent-skill", "linear"],
   },
-  "runpod-bridge": {
-    blurb: "RunPod guardrails for OpenAI Symphony + Linear agents: Codex/Claude Code workers, manifests, artifact proof, cleanup.",
-    tags: ["Python", "runpod", "agent-orchestration"],
+  "symphony-neocloud-bridge": {
+    displayName: "Symphony NeoCloud",
+    blurb: "Run agent workflows on cloud compute with preflight checks, cost caps, artifact receipts, and cleanup.",
+    tags: ["Python", "cloud-compute", "agent-orchestration"],
   },
   "biovoice": {
     blurb: "Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.",
@@ -138,6 +151,7 @@ function projectFromFallback(name) {
   const owner = fb.owner || GITHUB_USER;
   return {
     name,
+    displayName: fb.displayName,
     blurb: fb.blurb,
     tags: fb.tags,
     href: `https://github.com/${owner}/${name}`,
@@ -152,8 +166,12 @@ function buildGroups(repoMap) {
         .map((name) => {
           const base = repoMap[name] || projectFromFallback(name);
           if (!base) return null;
+          const curated = FALLBACK_DETAILS[name] || {};
           return {
             ...base,
+            displayName: curated.displayName || base.displayName,
+            blurb: curated.blurb || base.blurb,
+            tags: curated.tags || base.tags,
             category: g.title,
             categoryKey: g.key,
             categoryJp: g.jp,
@@ -253,7 +271,7 @@ function ProjectCard({ project }) {
         <img className="card-og" src={localOg} onError={onImgError} alt="" loading="lazy" decoding="async" />
       </div>
       <div className="card-body">
-        <h3 className="card-title">{project.name.replace(/-public$/, "")}</h3>
+        <h3 className="card-title">{project.displayName || project.name.replace(/-public$/, "")}</h3>
         <p className="card-blurb">{project.blurb}</p>
         <div className="card-foot">
           <div className="card-tags">

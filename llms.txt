@@ -2,7 +2,7 @@
 
 > Bio × AI. Builds AI tools for biological research — agentic systems for bioinformatics, structural biology, biomanufacturing, and automated labs.
 
-The aim is to speed the pace of research so people can live healthier, longer lives. Also other useful AI tools, like local text-to-speech, transcription, and planning long-horizon agentic work on neoclouds.
+The aim is to speed the pace of research so people can live healthier, longer lives. Also other useful AI tools, like local text-to-speech, transcription, and running long-horizon agent work on cloud compute.
 
 ## About
 
@@ -13,11 +13,19 @@ The aim is to speed the pace of research so people can live healthier, longer li
 
 ## Featured projects
 
-### BioSymphony — agentic harnesses for biology and long-horizon agent orchestration
-- [ferm-doe](https://github.com/BioSymphony/ferm-doe) — Agentic AI harness for pre-experiment DoE planning in fermentation, bioprocess, and biomanufacturing. Readiness gating, scale-up and scale-down bridging, biosafety-aware.
+### Orchestration — agent orchestration, Symphony, Linear, and cloud compute
 - [symphony-linear-starter](https://github.com/jvogan/symphony-linear-starter) — Self-improving starter skill / operator toolkit for Codex or Claude Code as orchestrator over Symphony workers + Linear.
 - [symphony-claude-lane](https://github.com/jvogan/symphony-claude-lane) — Portable skill for adding a Claude Code lane to OpenAI Symphony + Linear workflows.
-- [runpod-bridge](https://github.com/jvogan/runpod-bridge) — RunPod guardrails for OpenAI Symphony + Linear agents: Codex/Claude Code workers, manifests, artifact proof, cleanup.
+- [symphony-neocloud-bridge](https://github.com/jvogan/symphony-neocloud-bridge) — Run agent workflows on cloud compute with preflight checks, cost caps, artifact receipts, and cleanup.
+- [telegram-codex-bridge](https://github.com/jvogan/telegram-codex-bridge) — Local-first bridge: OpenAI Codex Desktop ↔ Telegram bot. Text, files, voice notes, and optional realtime calls.
+
+### BioSymphony — agentic harnesses for biology and long-horizon agent orchestration
+- [small-molecules](https://github.com/BioSymphony/small-molecules) — Small-molecule design workflows: choose tools, plan synthesis, dock ligands, and check ADMET.
+- [structure-factory](https://github.com/BioSymphony/structure-factory) — AI-agent toolkit for structural biology: design binders, map structures, screen candidates, rank results, and prepare cloud-scale runs.
+- [bioprospector](https://github.com/BioSymphony/bioprospector) — Biosynthetic route exploration for target molecules: find enzyme and gene candidates and turn pathway ideas into follow-up searches and experiments.
+- [genecluster](https://github.com/BioSymphony/genecluster) — Genome-mining workflows for natural products: search public genomes and transcriptomes, compare candidate clusters, and plan follow-up work.
+- [cryocore](https://github.com/BioSymphony/cryocore) — Cryo-EM workflows for maps, models, figures, state comparison, and local or cloud compute preparation.
+- [ferm-doe](https://github.com/BioSymphony/ferm-doe) — Fermentation and biomanufacturing experiment planning: choose design families, check scale context, and prepare run packets.
 
 ### BioTools — bioinformatics, structural biology, lab tooling
 - [biovoice](https://github.com/jvogan/biovoice) — Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.
@@ -26,6 +34,5 @@ The aim is to speed the pace of research so people can live healthier, longer li
 ### Agent Skills & Local AI — agent skills, local speech, dev infra
 - [ai-chatbot-daneel](https://github.com/jvogan/ai-chatbot-daneel) — Skill that scaffolds a safe, multi-model chatbot for Telegram or Discord. Claude, GPT, Gemini, and OpenAI-compatible backends. Nine safety layers on by default.
 - [Valar](https://github.com/jvogan/Valar) — Local speech stack for Apple Silicon: TTS, ASR, forced alignment, voices, daemon, and MCP bridge.
-- [telegram-codex-bridge](https://github.com/jvogan/telegram-codex-bridge) — Local-first bridge: OpenAI Codex Desktop ↔ Telegram bot. Text, files, voice notes, and optional realtime calls.
 - [whisper-hud](https://github.com/jvogan/whisper-hud) — System-wide voice-to-text for macOS. Hold a hotkey, speak, text appears at your cursor. OpenAI / Gemini / Apple Speech / local — bring your own keys.
 - [yt-agent](https://github.com/jvogan/yt-agent) — AI Agent Tool for terminal-first YouTube search, download, catalog, and clip tooling on yt-dlp.

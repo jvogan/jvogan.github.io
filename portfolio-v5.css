@@ -598,4 +598,23 @@ body::before {
 @media (max-width: 640px) {
   .page { padding: 28px 20px 64px; }
   .topbar { padding-bottom: 44px; flex-wrap: wrap; gap: 12px; }
+  .section-head {
+    display: block;
+    margin-bottom: 28px;
+  }
+  .section-title {
+    display: block;
+    max-width: 100%;
+  }
+  .section-head .section-title .ep {
+    display: block;
+    margin-top: 10px;
+    white-space: normal;
+    line-height: 1.25;
+  }
+  .section-meta {
+    max-width: 100%;
+    margin-top: 12px;
+    overflow-wrap: anywhere;
+  }
 }
