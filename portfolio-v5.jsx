@@ -7,6 +7,7 @@ const GITHUB_USER = "jvogan";
 // Different prefixes get their own CDN cache buckets, so we avoid the rate
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
+const SOCIAL_PREVIEW_VERSION = "16";
 
 // Featured repos by category. Order here controls section order on the page.
 // Any public repo NOT listed here is hidden, even if returned by the API.
@@ -245,10 +246,9 @@ function useProjects() {
 // -------------------------------------------------------------
 function ProjectCard({ project }) {
   const href = project.href || `https://github.com/${GITHUB_USER}/${project.name}`;
-  // Self-hosted social preview to avoid GitHub's 100/hour rate limit on
-  // opengraph.githubassets.com. If the local file is missing, fall back
-  // to the live URL on error.
-  const localOg = `media/social-previews/${project.name}.webp`;
+  // Use the repo's bundled social-preview banner first. GitHub's generated
+  // OpenGraph card is only a fallback if a bundled preview is missing.
+  const localOg = `media/social-previews/${project.name}.webp?v=${SOCIAL_PREVIEW_VERSION}`;
   const ogOwner = project.owner || GITHUB_USER;
   const liveOg = `https://opengraph.githubassets.com/${OG_PREFIX}-${project.name}/${ogOwner}/${project.name}`;
   const onImgError = (e) => {
