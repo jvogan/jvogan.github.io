@@ -9,7 +9,7 @@ The aim is to speed the pace of research so people can live healthier, longer li
 - Name: Jacob Vogan
 - Profile: https://github.com/jvogan
 - Site: https://jvogan.github.io/
-- Stack: Claude Code, Codex, Gemini, Gemma, GPT-OSS
+- Stack: Claude Code, Codex, Gemini, Grok Build, GLM-5.2
 
 ## Featured projects
 

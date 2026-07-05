@@ -391,7 +391,7 @@ function App() {
               <div className="hero-meta">
                 <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
                 <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
-                <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Gemma · GPT-OSS</span></div>
+                <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok Build · GLM-5.2</span></div>
                 <div className="row"><span className="label">Code <span lang="ja">コード</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">github.com/{GITHUB_USER} →</a></span></div>
               </div>
             </div>
