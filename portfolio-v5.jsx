@@ -7,7 +7,7 @@ const GITHUB_USER = "jvogan";
 // Different prefixes get their own CDN cache buckets, so we avoid the rate
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
-const SOCIAL_PREVIEW_VERSION = "16";
+const SOCIAL_PREVIEW_VERSION = "17";
 
 // Featured repos by category. Order here controls section order on the page.
 // Any public repo NOT listed here is hidden, even if returned by the API.
@@ -17,7 +17,13 @@ const PROJECT_GROUPS = [
     title: "Orchestration",
     jp: "指揮",
     blurb: "Agent orchestration · Symphony · Linear · cloud compute",
-    repos: ["symphony-linear-starter", "symphony-claude-lane", "symphony-neocloud-bridge", "telegram-codex-bridge"],
+    repos: [
+      "a-fable-of-codexes",
+      "symphony-linear-starter",
+      "symphony-claude-lane",
+      "symphony-neocloud-bridge",
+      "telegram-codex-bridge",
+    ],
   },
   {
     key: "biosymphony",
@@ -53,6 +59,11 @@ const PROJECT_GROUPS = [
 // API is reachable. Live API data still supplies href, owner, and timestamps.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "a-fable-of-codexes": {
+    displayName: "A Fable of Codexes",
+    blurb: "Claude Code skill for orchestrating Codex and Claude worker fleets with campaign state, worktrees, review gates, and resumable plans.",
+    tags: ["agent-skill", "orchestration", "codex"],
+  },
   "small-molecules": {
     displayName: "Small Molecules",
     blurb: "Small-molecule design workflows: choose tools, plan synthesis, dock ligands, and check ADMET.",
