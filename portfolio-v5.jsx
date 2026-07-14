@@ -44,7 +44,7 @@ const PROJECT_GROUPS = [
     title: "BioTools",
     jp: "生命",
     blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["biovoice", "proteus"],
+    repos: ["motif", "biovoice", "proteus"],
   },
   {
     key: "agent-tools",
@@ -112,6 +112,11 @@ const FALLBACK_DETAILS = {
     displayName: "Symphony NeoCloud",
     blurb: "Run agent workflows on cloud compute with preflight checks, cost caps, artifact receipts, and cleanup.",
     tags: ["Python", "cloud-compute", "agent-orchestration"],
+  },
+  "motif": {
+    displayName: "Motif",
+    blurb: "A molecular biology workbench for Claude Science. View maps and alignments, make entries and notes, and more — all without leaving Claude Science.",
+    tags: ["TypeScript", "molecular-biology", "mcp"],
   },
   "biovoice": {
     blurb: "Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.",
