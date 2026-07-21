@@ -1,0 +1,8 @@
+:HL["/movelens/_next/static/chunks/2s-d2ln_zh0kt.css","style"]
+:HL["/movelens/_next/static/media/5f402bd2d8eef81a-s.p.40bho2kviej2o.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/movelens/_next/static/media/75affa71d1e2f6a7-s.p.17-aodiw50953.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/movelens/_next/static/media/9433d1a810498265-s.p.1hij5ex6k3v9q.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/movelens/_next/static/media/99e609270109b47d-s.p.40sczeszzbjw1.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/movelens/_next/static/media/effe91970fc4db64-s.p.0oace-s_gkfks.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/movelens/_next/static/chunks/2w35i784jx-hf.css","style"]
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"github-pages","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"hcPqSJ3_QiL0yxIxcoOcG"}
