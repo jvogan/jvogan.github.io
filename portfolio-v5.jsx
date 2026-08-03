@@ -127,7 +127,7 @@ const FALLBACK_DETAILS = {
     tags: ["Python", "structural-biology"],
   },
   "ai-chatbot-daneel": {
-    blurb: "Skill that scaffolds a safe, multi-model chatbot for Telegram or Discord. Claude, GPT, Gemini, and OpenAI-compatible backends. Nine safety layers on by default.",
+    blurb: "Skill that scaffolds a multi-model chatbot for Telegram or Discord. Claude, GPT, Gemini, and OpenAI-compatible backends. Only approved users can reach it, with prompt injection blocked by default.",
     tags: ["Python", "ai-agent", "ai-safety"],
   },
   "Valar": {
@@ -442,7 +442,15 @@ function App() {
 
         <footer className="footer">
           <div>© {new Date().getFullYear()} · Jacob Vogan</div>
-          <div>github.com/<span className="kbd">jvogan</span></div>
+          <div className="footer-links">
+            <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">
+              github.com/<span className="kbd">{GITHUB_USER}</span>
+            </a>
+            <a href="https://houseofvogan.com/" target="_blank" rel="noopener noreferrer">houseofvogan.com</a>
+            <a href="https://jvogan.github.io/motif-site/">Motif</a>
+            <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a>
+            <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a>
+          </div>
         </footer>
       </div>
 
