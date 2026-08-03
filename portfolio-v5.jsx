@@ -447,6 +447,7 @@ function App() {
               github.com/<span className="kbd">{GITHUB_USER}</span>
             </a>
             <a href="https://houseofvogan.com/" target="_blank" rel="noopener noreferrer">houseofvogan.com</a>
+            <a href="https://biosymphony.github.io/" target="_blank" rel="noopener noreferrer">BioSymphony</a>
             <a href="https://jvogan.github.io/motif-site/">Motif</a>
             <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a>
             <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a>
