@@ -101,17 +101,19 @@ const FALLBACK_DETAILS = {
     owner: "BioSymphony",
   },
   "symphony-linear-starter": {
+    displayName: "Symphony Linear Starter",
     blurb: "Self-improving starter skill / operator toolkit for Codex or Claude Code as orchestrator over Symphony workers + Linear.",
-    tags: ["Python", "ai-agents", "claude-code"],
+    tags: ["Python", "ai-agent", "claude-code"],
   },
   "symphony-claude-lane": {
+    displayName: "Symphony Claude Lane",
     blurb: "Portable skill for adding a Claude Code lane to OpenAI Symphony + Linear workflows.",
     tags: ["Shell", "agent-skill", "linear"],
   },
   "symphony-neocloud-bridge": {
-    displayName: "Symphony NeoCloud",
+    displayName: "NeoCloud Bridge",
     blurb: "Run agent workflows on cloud compute with preflight checks, cost caps, artifact receipts, and cleanup.",
-    tags: ["Python", "cloud-compute", "agent-orchestration"],
+    tags: ["Python", "cloud-compute", "orchestration"],
   },
   "motif": {
     displayName: "Motif",
@@ -119,32 +121,41 @@ const FALLBACK_DETAILS = {
     tags: ["TypeScript", "molecular-biology", "mcp"],
   },
   "biovoice": {
+    displayName: "BioVoice",
     blurb: "Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.",
     tags: ["TypeScript", "alphafold", "molecular-visualization"],
   },
   "proteus": {
+    displayName: "Proteus",
     blurb: "Structural biology superpowers for AI coding agents: PyMOL, ChimeraX, AlphaFold DB, RCSB PDB, UniProt, and Rosetta workflows.",
     tags: ["Python", "structural-biology"],
   },
   "ai-chatbot-daneel": {
+    displayName: "Daneel",
     blurb: "Skill that scaffolds a multi-model chatbot for Telegram or Discord. Claude, GPT, Gemini, and OpenAI-compatible backends. Only approved users can reach it, with prompt injection blocked by default.",
     tags: ["Python", "ai-agent", "ai-safety"],
   },
   "Valar": {
+    displayName: "Valar",
     blurb: "Local speech stack for Apple Silicon: TTS, ASR, forced alignment, voices, daemon, and MCP bridge.",
     tags: ["Swift", "apple-silicon", "asr"],
   },
   "telegram-codex-bridge": {
+    displayName: "Telegram Codex Bridge",
     blurb: "Local-first bridge: OpenAI Codex Desktop ↔ Telegram bot. Text, files, voice notes, and optional realtime calls.",
     tags: ["TypeScript", "codex", "local-first"],
   },
   "whisper-hud": {
+    displayName: "WhisperHUD",
     blurb: "System-wide voice-to-text for macOS. Hold a hotkey, speak, text appears at your cursor. OpenAI / Gemini / Apple Speech / local — bring your own keys.",
     tags: ["Python", "accessibility", "byok"],
   },
+  // No display name: the README calls it yt-agent too, so the slug is the name.
+  // It is the only card that keeps the mono treatment, which reads as deliberate
+  // rather than as a second tier.
   "yt-agent": {
     blurb: "AI Agent Tool for terminal-first YouTube search, download, catalog, and clip tooling on yt-dlp.",
-    tags: ["Python", "ai-agent", "ai-skill"],
+    tags: ["Python", "ai-agent", "agent-skill"],
   },
 };
 
@@ -204,13 +215,13 @@ function flattenGroups(groups) {
   return groups.flatMap((g) => g.projects);
 }
 
-// Newest repos first. Fallback rows have no createdAt and stay in PROJECT_GROUPS order.
+// Newest first — but only when every row came from the API. Fallback rows carry
+// no createdAt, so a partial API response would sink exactly those cards to the
+// bottom and scramble the page against the curated order. When the data is
+// mixed or absent, the PROJECT_GROUPS order stands as declared.
 function sortByCreated(projects) {
-  return [...projects].sort((a, b) => {
-    const ta = a.createdAt ? Date.parse(a.createdAt) : 0;
-    const tb = b.createdAt ? Date.parse(b.createdAt) : 0;
-    return tb - ta;
-  });
+  if (!projects.every((p) => p.createdAt)) return projects;
+  return [...projects].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
 }
 
 async function fetchRepoMap() {
@@ -260,7 +271,7 @@ function useProjects() {
 // -------------------------------------------------------------
 // Card
 // -------------------------------------------------------------
-function ProjectCard({ project }) {
+function ProjectCard({ project, index }) {
   const href = project.href || `https://github.com/${GITHUB_USER}/${project.name}`;
   // Use the repo's bundled social-preview banner first. GitHub's generated
   // OpenGraph card is only a fallback if a bundled preview is missing.
@@ -273,6 +284,15 @@ function ProjectCard({ project }) {
       e.currentTarget.src = liveOg;
     }
   };
+  // Banners fade in from a hatched plate. A cached image can be complete before
+  // React attaches onLoad, so the ref checks for that case too.
+  const markLoaded = (e) => e.currentTarget.classList.add("is-loaded");
+  const checkCached = (el) => {
+    if (el && el.complete && el.naturalWidth > 0) el.classList.add("is-loaded");
+  };
+  // Curated entries carry a display name; the rest fall back to the repo slug,
+  // which is set as code rather than as a serif product title.
+  const isSlug = !project.displayName;
   return (
     <a className="card" href={href} target="_blank" rel="noopener noreferrer">
       {project.category && (
@@ -284,10 +304,19 @@ function ProjectCard({ project }) {
         </span>
       )}
       <div className="card-banner">
-        <img className="card-og" src={localOg} onError={onImgError} alt="" loading="lazy" decoding="async" />
+        <img
+          className="card-og"
+          src={localOg}
+          ref={checkCached}
+          onLoad={markLoaded}
+          onError={onImgError}
+          alt=""
+          loading={index < 6 ? "eager" : "lazy"}
+          decoding="async"
+        />
       </div>
       <div className="card-body">
-        <h3 className="card-title">{project.displayName || project.name.replace(/-public$/, "")}</h3>
+        <h3 className={"card-title" + (isSlug ? " is-slug" : "")}>{project.displayName || project.name.replace(/-public$/, "")}</h3>
         <p className="card-blurb">{project.blurb}</p>
         <div className="card-foot">
           <div className="card-tags">
@@ -322,7 +351,6 @@ function App() {
   const accent = (ACCENTS[tweaks.accent] || ACCENTS.vermillion).hex;
 
   const { projects, status } = useProjects();
-  const timestamp = useTimestamp();
   const isDesktop = useIsDesktop();
 
   const style = useMemo(() => ({ "--red": accent, "--red-deep": accent }), [accent]);
@@ -396,14 +424,14 @@ function App() {
               <div className="hero-meta">
                 <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
                 <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
-                <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok Build · GLM-5.2</span></div>
-                <div className="row"><span className="label">Code <span lang="ja">コード</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">github.com/{GITHUB_USER} →</a></span></div>
+                <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok · Kimi</span></div>
+                <div className="row"><span className="label">Links <span lang="ja">リンク</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a> · <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a></span></div>
               </div>
             </div>
             <div className="hero-avatar-wrap">
               <img
                 className="hero-avatar"
-                src={`https://github.com/${GITHUB_USER}.png?size=240`}
+                src={`https://github.com/${GITHUB_USER}.png?size=480`}
                 alt="Jacob Vogan"
                 referrerPolicy="no-referrer"
               />
@@ -427,16 +455,16 @@ function App() {
 
         <div className="grid">
           {status === "loading" && Array.from({ length: 6 }).map((_, i) => (
-            <div key={`skel-${i}`} className="card" aria-hidden style={{ opacity: 0.35 }}>
-              <div className="card-banner" style={{ background: "var(--paper)" }} />
+            <div key={`skel-${i}`} className="card card-skel" aria-hidden>
+              <div className="card-banner" />
               <div className="card-body">
                 <h3 className="card-title muted">—</h3>
                 <p className="card-blurb muted">// awaiting transmission</p>
               </div>
             </div>
           ))}
-          {(projects || []).map((p) => (
-            <ProjectCard key={p.name} project={p} />
+          {(projects || []).map((p, i) => (
+            <ProjectCard key={p.name} project={p} index={i} />
           ))}
         </div>
 
@@ -537,19 +565,6 @@ function useIsDesktop() {
     return () => mq.removeEventListener?.("change", on);
   }, []);
   return isDesktop;
-}
-
-function useTimestamp() {
-  const [t, setT] = useState(() => fmt(new Date()));
-  useEffect(() => {
-    const id = setInterval(() => setT(fmt(new Date())), 1000);
-    return () => clearInterval(id);
-  }, []);
-  return t;
-  function fmt(d) {
-    const pad = (n) => String(n).padStart(2, "0");
-    return `${d.getUTCFullYear()}.${pad(d.getUTCMonth()+1)}.${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())}`;
-  }
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(<App />);

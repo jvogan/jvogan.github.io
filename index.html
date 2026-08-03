@@ -45,9 +45,11 @@
 
   <!-- Above-the-fold paint hints -->
   <link rel="preload" as="image" href="media/lab-runner-poster.jpg" media="(min-width: 821px)" />
-  <link rel="preload" as="image" href="media/social-previews/small-molecules.webp?v=16" type="image/webp" />
+  <!-- Version must track SOCIAL_PREVIEW_VERSION in portfolio-v5.jsx, or the
+       preload misses the request the app actually makes. -->
+  <link rel="preload" as="image" href="media/social-previews/small-molecules.webp?v=17" type="image/webp" />
 
-  <link rel="stylesheet" href="portfolio-v5.css?v=16" />
+  <link rel="stylesheet" href="portfolio-v5.css?v=20" />
 
   <link rel="dns-prefetch" href="https://unpkg.com" />
   <link rel="preconnect" href="https://unpkg.com" crossorigin />
@@ -76,13 +78,14 @@
           "Automated laboratory systems",
           "AI agents",
           "Agent orchestration",
-          "OpenAI Symphony",
-          "Claude Code",
           "Local speech (TTS, ASR)",
           "Long-horizon agentic workflows"
         ],
         "sameAs": [
-          "https://github.com/jvogan"
+          "https://github.com/jvogan",
+          "https://huggingface.co/JacobMolBio",
+          "https://x.com/jacobmolbio",
+          "https://houseofvogan.com/"
         ]
       },
       {
@@ -105,13 +108,17 @@
     <div style="max-width:680px;margin:80px auto;padding:0 24px;font-family:'Inter Tight',system-ui,sans-serif;color:#111;">
       <h1 style="font-family:'Shippori Mincho B1',serif;font-size:64px;line-height:1;margin:0 0 16px;">Jacob <span style="color:#C22118;">Vogan</span></h1>
       <p style="font-size:18px;line-height:1.5;color:#2a2722;">Bio × AI. Building AI tools to help biological research, including agentic systems for bioinformatics, structural biology, biomanufacturing, and automated labs.</p>
-      <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;color:#5a544a;">This page renders with JavaScript enabled. See <a href="https://github.com/jvogan" style="color:#C22118;">github.com/jvogan</a> for the live work.</p>
+      <p style="font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;color:#5a544a;">This page renders with JavaScript enabled. The work is all public without it:<br />
+        <a href="https://github.com/jvogan" style="color:#C22118;">github.com/jvogan</a> ·
+        <a href="https://huggingface.co/JacobMolBio" style="color:#C22118;">Hugging Face</a> ·
+        <a href="https://biosymphony.github.io/" style="color:#C22118;">BioSymphony</a> ·
+        <a href="https://houseofvogan.com/" style="color:#C22118;">houseofvogan.com</a></p>
     </div>
   </noscript>
 
   <div id="root"></div>
 
   <script defer src="tweaks-stub.js?v=16"></script>
-  <script defer src="portfolio-v5.js?v=18"></script>
+  <script defer src="portfolio-v5.js?v=20"></script>
 </body>
 </html>

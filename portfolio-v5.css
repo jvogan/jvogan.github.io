@@ -6,6 +6,13 @@
   --ink-3: #8A8A84;
   --hair: rgba(17, 17, 17, 0.14);
   --hair-strong: rgba(17, 17, 17, 0.32);
+  /* Hatched placeholder for banners that have not painted yet — reads as a
+     deliberate blank plate rather than a hole in the grid. */
+  --hatch: repeating-linear-gradient(
+    -45deg,
+    transparent 0 6px,
+    rgba(17, 17, 17, 0.05) 6px 7px
+  );
 
   --red: #C22118;       /* NERV / Eva title red */
   --red-deep: #8A130C;
@@ -66,6 +73,9 @@ noscript { display: none !important; }
   outline: none;
 }
 
+::selection { background: var(--red); color: #FAF7EF; }
+::-moz-selection { background: var(--red); color: #FAF7EF; }
+
 /* Custom keyboard-focus ring — red, only visible to keyboard users */
 :focus { outline: none; }
 :focus-visible {
@@ -75,6 +85,31 @@ noscript { display: none !important; }
 }
 .hero-video:focus-visible {
   outline-offset: 4px;
+}
+
+/* Reduced motion — kill every looping/decorative animation and collapse
+   transitions. Hover and load states still change, they just stop moving. */
+@media (prefers-reduced-motion: reduce) {
+  .topbar .live::before,
+  .pipe-node.on::before,
+  .pipe-node.on::after,
+  .hero-video::after,
+  .card-skel .card-banner {
+    animation: none !important;
+  }
+  .card,
+  .card-og,
+  .card-arrow,
+  .tag,
+  .hero-video {
+    transition-duration: 1ms !important;
+  }
+  .card:hover,
+  .card:focus-visible,
+  .hero-video:hover { transform: none; }
+  .card:hover .card-og { transform: none; }
+  .card:hover .card-arrow,
+  .card:focus-visible .card-arrow { transform: none; }
 }
 
 /* Print stylesheet — clean, ink-saving */
@@ -152,7 +187,7 @@ body::before {
 .pipeline {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.2em;
@@ -167,13 +202,26 @@ body::before {
 .pipe-node.on {
   color: var(--red);
 }
+/* Marker sits under the active node, not in the gutter — the old left-hand
+   dot landed on top of the preceding arrow glyph. */
 .pipe-node.on::before {
   content: "";
   position: absolute;
-  left: -10px;
-  top: 50%;
-  width: 5px; height: 5px;
-  margin-top: -2.5px;
+  left: 0;
+  right: 0.2em; /* discount the trailing letter-spacing so the rule reads centred */
+  bottom: -3px;
+  height: 1px;
+  background: var(--red);
+  transform-origin: left center;
+  animation: pipe-sweep 420ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.pipe-node.on::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 4px; height: 4px;
+  margin-left: -2px;
   background: var(--red);
   border-radius: 50%;
   animation: pipe-pulse 1.4s ease-out infinite;
@@ -185,7 +233,11 @@ body::before {
 @keyframes pipe-pulse {
   0%   { transform: scale(0.6); opacity: 0.4; }
   40%  { transform: scale(1);   opacity: 1; }
-  100% { transform: scale(1.6); opacity: 0; }
+  100% { transform: scale(2.2); opacity: 0; }
+}
+@keyframes pipe-sweep {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
 }
 
 /* ---------- HERO ---------- */
@@ -329,11 +381,13 @@ body::before {
   align-items: start;
   position: relative;
 }
+/* Column rule, centred in the real gutter. For a 1.5fr / 1fr split with gap G
+   the first column ends at 60% - 0.6G, so the gutter centre is 60% - 0.1G. */
 .hero-body::before {
   content: "";
   position: absolute;
   top: 4px; bottom: 4px;
-  left: calc(60% + 8px);
+  left: calc(60% - 5.6px);
   width: 1px;
   background: var(--ink);
   opacity: 0.5;
@@ -376,24 +430,45 @@ body::before {
   flex-direction: column;
   gap: 10px;
 }
-.hero-meta .row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px dashed var(--hair); gap: 24px; }
-.hero-meta .label { color: var(--ink-3); }
-.hero-meta .val { color: var(--ink); }
+/* Label never breaks mid-word (it splits the Japanese otherwise); a value too
+   long for the row drops to its own line and stays flush right. */
+.hero-meta .row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px dashed var(--hair);
+  gap: 4px 24px;
+}
+.hero-meta .label { color: var(--ink-3); white-space: nowrap; }
+.hero-meta .val { color: var(--ink); margin-left: auto; text-align: right; }
 .hero-meta .val.red { color: var(--red); }
-.hero-meta a { color: var(--red); text-decoration: none; border-bottom: 1px solid var(--red); padding-bottom: 1px; }
+.hero-meta a {
+  color: var(--red);
+  text-decoration: none;
+  border-bottom: 1px solid var(--red);
+  padding-bottom: 1px;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+.hero-meta a:hover,
+.hero-meta a:focus-visible { background: var(--red); color: var(--paper); }
 
+/* Flush right so the portrait, the hero video above it, the section rule and
+   the card grid all share one right margin. */
 .hero-avatar-wrap {
   display: flex;
   flex-direction: column;
   gap: 14px;
+  width: min(320px, 100%);
+  margin-left: auto;
 }
 .hero-avatar {
   width: 100%;
   aspect-ratio: 1 / 1;
-  max-width: 280px;
   border: 1px solid var(--ink);
   object-fit: cover;
   display: block;
+  background: var(--paper) var(--hatch);
 }
 .hero-avatar-caption {
   font-family: var(--font-mono);
@@ -402,11 +477,15 @@ body::before {
   text-transform: uppercase;
   color: var(--ink-3);
   display: flex; justify-content: space-between;
-  max-width: 280px;
   padding-top: 4px;
   border-top: 1px solid var(--ink);
 }
 .hero-avatar-caption .r { color: var(--red); }
+
+/* Single column: the portrait hangs off the text edge, not the right rail. */
+@media (max-width: 820px) {
+  .hero-avatar-wrap { margin-left: 0; width: min(280px, 100%); }
+}
 
 /* ---------- SECTION ---------- */
 .section-head {
@@ -465,18 +544,25 @@ body::before {
   text-decoration: none;
   color: inherit;
   position: relative;
-  transition: transform 0.2s ease, box-shadow 0.25s ease;
+  transition:
+    transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.card:hover {
-  transform: translateY(-2px);
-  box-shadow: 4px 4px 0 var(--ink);
+/* Ink, not red. On a page of 18 cards a red lift turned the accent into a
+   second base colour; black reads as the card physically lifting off the paper
+   and leaves red to mean one thing. */
+.card:hover,
+.card:focus-visible {
+  transform: translate(-2px, -3px);
+  box-shadow: 5px 6px 0 var(--ink);
 }
+.card:active { transform: translate(0, 0); box-shadow: 2px 2px 0 var(--ink); }
 
 .card-banner {
   position: relative;
   aspect-ratio: 2 / 1;
   overflow: hidden;
-  background: var(--paper);
+  background: var(--paper) var(--hatch);
   border-bottom: 1px solid var(--ink);
 }
 .card-og {
@@ -484,9 +570,20 @@ body::before {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  background: var(--paper);
+  /* Transparent until it paints, so the hatch below shows through instead of
+     a blank plate — and a banner that never loads degrades to the hatch. */
+  background: transparent;
+  opacity: 0;
+  transition:
+    opacity 420ms ease,
+    transform 640ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
+.card-og.is-loaded { opacity: 1; }
+.card:hover .card-og { transform: scale(1.035); }
 
+/* Grey at rest, ink on hover — the same move the tags make, so the whole card
+   darkens as one object. Red on all 18 strips made vermillion a second base
+   colour; now the arrow is the only red on a card and it marks the action. */
 .card-cat-tag {
   display: block;
   font-family: var(--font-mono);
@@ -494,13 +591,18 @@ body::before {
   font-weight: 500;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--red);
+  color: var(--ink-3);
   background: var(--paper);
   padding: 9px 14px;
   border-bottom: 1px solid var(--ink);
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   line-height: 1;
+  transition: color 220ms ease;
 }
+.card:hover .card-cat-tag,
+.card:focus-visible .card-cat-tag { color: var(--ink); }
 .card-cat-jp {
   font-family: var(--font-jp);
   letter-spacing: 0.12em;
@@ -527,6 +629,16 @@ body::before {
   line-height: 1.1;
   word-break: break-word;
 }
+/* Repos with no curated display name keep their slug. Setting those in mono
+   makes the mixed set read as two deliberate registers — product names in the
+   serif, raw repo names as code — instead of an inconsistent heading style. */
+.card-title.is-slug {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: -0.005em;
+  line-height: 1.25;
+}
 .card-blurb {
   margin: 0;
   font-family: var(--font-body);
@@ -537,30 +649,56 @@ body::before {
 }
 .card-foot {
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  gap: 8px;
+  gap: 14px;
   margin-top: auto;
   padding-top: 12px;
   border-top: 1px dashed var(--hair);
 }
-.card-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-width: 0;   /* lets the tag stack wrap instead of squeezing the arrow */
+  flex: 1 1 auto;
+}
 .tag {
   font-family: var(--font-mono);
   font-size: 10px;
+  line-height: 1.5;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   padding: 2px 7px;
-  border: 1px solid var(--ink);
+  border: 1px solid var(--hair-strong);
   color: var(--ink-2);
   background: transparent;
+  transition: border-color 220ms ease, color 220ms ease;
 }
+.card:hover .tag { border-color: var(--ink); color: var(--ink); }
+/* Never let the affordance collapse into a two-line 開 / → stack. */
 .card-arrow {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--red);
+  flex: 0 0 auto;
+  white-space: nowrap;
+  line-height: 1.5;
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.card:hover .card-arrow,
+.card:focus-visible .card-arrow { transform: translateX(4px); }
+
+/* Placeholder cards shown while the repo list is in flight. */
+.card-skel { pointer-events: none; }
+.card-skel .card-banner { animation: skel-breathe 2.4s ease-in-out infinite; }
+.card-skel .card-title,
+.card-skel .card-blurb { color: var(--ink-3); }
+@keyframes skel-breathe {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
 }
 
 /* ---------- FOOTER ---------- */
@@ -621,6 +759,11 @@ body::before {
 @media (max-width: 640px) {
   .page { padding: 28px 20px 64px; }
   .topbar { padding-bottom: 44px; flex-wrap: wrap; gap: 12px; }
+  /* The five-node loop is 16px too wide for a 390px phone at the desktop
+     tracking; tighten it, and let it wrap rather than run off the margin. */
+  .topbar-right { max-width: 100%; }
+  .pipeline { flex-wrap: wrap; gap: 6px 9px; font-size: 10px; letter-spacing: 0.12em; }
+  .pipe-node.on::before { right: 0.12em; }
   .section-head {
     display: block;
     margin-bottom: 28px;
