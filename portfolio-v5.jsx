@@ -249,19 +249,84 @@ async function fetchRepoMap() {
   return map;
 }
 
+// Everything a card displays (title, blurb, tags, href, owner) comes from
+// FALLBACK_DETAILS; the only thing the live API adds is the newest-first
+// ordering. build.sh resolves that ordering once and hands the same list to
+// both renderers — to Node through the __INITIAL_ORDER__ scope variable
+// prerender.mjs injects, and to the browser through the JSON script tag it
+// emits — so the pre-rendered markup and the first client render agree.
+function readInitialOrder() {
+  if (typeof __INITIAL_ORDER__ !== "undefined" && Array.isArray(__INITIAL_ORDER__)) {
+    return __INITIAL_ORDER__;
+  }
+  if (typeof document === "undefined") return null;
+  const el = document.getElementById("initial-order");
+  if (!el) return null;
+  try {
+    const parsed = JSON.parse(el.textContent);
+    return Array.isArray(parsed) ? parsed : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+// The footer year comes from the build, not from the reader's clock: calling
+// `new Date()` in both renderers would disagree across a year boundary and put
+// a real hydration mismatch in the footer. Falls back to the current year when
+// the page is served without a prerender.
+function readBuildYear() {
+  if (typeof __BUILD_YEAR__ !== "undefined" && __BUILD_YEAR__) return __BUILD_YEAR__;
+  if (typeof document !== "undefined") {
+    const el = document.getElementById("initial-order");
+    const y = el ? Number(el.getAttribute("data-year")) : NaN;
+    if (Number.isFinite(y) && y > 0) return y;
+  }
+  return new Date().getFullYear();
+}
+
+// Names absent from `order` keep their declared position, appended after the
+// ranked ones, so a repo added to PROJECT_GROUPS after the last build still
+// shows up instead of vanishing.
+function applyOrder(projects, order) {
+  if (!order || !order.length) return projects;
+  const rank = new Map(order.map((name, i) => [name, i]));
+  const ranked = projects
+    .filter((p) => rank.has(p.name))
+    .sort((a, b) => rank.get(a.name) - rank.get(b.name));
+  const rest = projects.filter((p) => !rank.has(p.name));
+  return [...ranked, ...rest];
+}
+
+// Both post-fetch paths fall back to the order the build baked in, never to the
+// declared PROJECT_GROUPS order. The baked order is the last ranking that was
+// known good, and it is what the reader is already looking at — dropping to the
+// declared order would reshuffle the grid under them a moment after load, which
+// is exactly what a partial or failed API response used to do.
 function useProjects() {
-  const [state, setState] = useState({ projects: null, status: "loading" });
+  const initialOrder = readInitialOrder();
+  const [state, setState] = useState(() => ({
+    projects: applyOrder(flattenGroups(buildGroups({})), initialOrder),
+    status: "fallback",
+  }));
   useEffect(() => {
     let cancelled = false;
     fetchRepoMap()
       .then((repoMap) => {
         if (cancelled) return;
-        const projects = sortByCreated(flattenGroups(buildGroups(repoMap)));
+        const flat = flattenGroups(buildGroups(repoMap));
+        // One of the two GitHub endpoints can succeed while the other fails, in
+        // which case the rows are mixed and sortByCreated declines to rank them.
+        const projects = flat.every((p) => p.createdAt)
+          ? sortByCreated(flat)
+          : applyOrder(flat, initialOrder);
         setState({ projects, status: projects.length ? "live" : "fallback" });
       })
       .catch(() => {
         if (cancelled) return;
-        setState({ projects: flattenGroups(buildGroups({})), status: "fallback" });
+        setState({
+          projects: applyOrder(flattenGroups(buildGroups({})), initialOrder),
+          status: "fallback",
+        });
       });
     return () => { cancelled = true; };
   }, []);
@@ -350,7 +415,7 @@ function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
   const accent = (ACCENTS[tweaks.accent] || ACCENTS.vermillion).hex;
 
-  const { projects, status } = useProjects();
+  const { projects } = useProjects();
   const isDesktop = useIsDesktop();
 
   const style = useMemo(() => ({ "--red": accent, "--red-deep": accent }), [accent]);
@@ -454,22 +519,13 @@ function App() {
         </div>
 
         <div className="grid">
-          {status === "loading" && Array.from({ length: 6 }).map((_, i) => (
-            <div key={`skel-${i}`} className="card card-skel" aria-hidden>
-              <div className="card-banner" />
-              <div className="card-body">
-                <h3 className="card-title muted">—</h3>
-                <p className="card-blurb muted">// awaiting transmission</p>
-              </div>
-            </div>
-          ))}
           {(projects || []).map((p, i) => (
             <ProjectCard key={p.name} project={p} index={i} />
           ))}
         </div>
 
         <footer className="footer">
-          <div>© {new Date().getFullYear()} · Jacob Vogan</div>
+          <div>© {readBuildYear()} · Jacob Vogan</div>
           <div className="footer-links">
             <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">
               github.com/<span className="kbd">{GITHUB_USER}</span>
@@ -567,4 +623,13 @@ function useIsDesktop() {
   return isDesktop;
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+// Mount only in a browser: prerender.mjs evaluates this same file under Node to
+// pull `App` out, and there is no document there. Hydrate onto the pre-rendered
+// markup when it is present; render fresh when #root is empty.
+if (typeof document !== "undefined") {
+  const rootEl = document.getElementById("root");
+  if (rootEl) {
+    if (rootEl.firstChild) ReactDOM.hydrateRoot(rootEl, <App />);
+    else ReactDOM.createRoot(rootEl).render(<App />);
+  }
+}

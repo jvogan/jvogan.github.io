@@ -1,0 +1,14 @@
+{
+  "name": "jvogan-github-io",
+  "private": true,
+  "version": "0.0.0",
+  "description": "Build-time tooling only. The site itself ships no npm runtime deps; React is vendored into vendor/ from these pinned packages.",
+  "scripts": {
+    "build": "./build.sh"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.10",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  }
+}
