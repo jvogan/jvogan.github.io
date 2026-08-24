@@ -8,6 +8,7 @@ const GITHUB_USER = "jvogan";
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
 const SOCIAL_PREVIEW_VERSION = "17";
+const FEATURED_PROJECTS = ["motif"];
 
 // Featured repos by category. Order here controls section order on the page.
 // Any public repo NOT listed here is hidden, even if returned by the API.
@@ -18,6 +19,7 @@ const PROJECT_GROUPS = [
     jp: "指揮",
     blurb: "Agent orchestration · Symphony · Linear · cloud compute",
     repos: [
+      "ox-driver",
       "a-fable-of-codexes",
       "symphony-linear-starter",
       "symphony-claude-lane",
@@ -59,6 +61,11 @@ const PROJECT_GROUPS = [
 // API is reachable. Live API data still supplies href, owner, and timestamps.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "ox-driver": {
+    displayName: "Ox Driver",
+    blurb: "Launch a fleet of OpenRouter Ox Alpha agents at max reasoning through Pi, directly or from Claude Code and Codex.",
+    tags: ["agent-skill", "openrouter", "multi-agent"],
+  },
   "a-fable-of-codexes": {
     displayName: "A Fable of Codexes",
     blurb: "Claude Code skill for orchestrating Codex and Claude worker fleets with campaign state, worktrees, review gates, and resumable plans.",
@@ -215,13 +222,26 @@ function flattenGroups(groups) {
   return groups.flatMap((g) => g.projects);
 }
 
-// Newest first — but only when every row came from the API. Fallback rows carry
-// no createdAt, so a partial API response would sink exactly those cards to the
-// bottom and scramble the page against the curated order. When the data is
-// mixed or absent, the PROJECT_GROUPS order stands as declared.
+function prioritizeFeatured(projects) {
+  const rank = new Map(FEATURED_PROJECTS.map((name, i) => [name, i]));
+  return projects
+    .map((project, index) => ({ project, index }))
+    .sort((a, b) => {
+      const aRank = rank.has(a.project.name) ? rank.get(a.project.name) : FEATURED_PROJECTS.length;
+      const bRank = rank.has(b.project.name) ? rank.get(b.project.name) : FEATURED_PROJECTS.length;
+      return aRank - bRank || a.index - b.index;
+    })
+    .map(({ project }) => project);
+}
+
+// Motif remains the portfolio lead. The other projects are newest first, but
+// only when every row came from the API. Fallback rows carry no createdAt, so a
+// partial API response keeps the declared order instead of sinking those cards.
 function sortByCreated(projects) {
-  if (!projects.every((p) => p.createdAt)) return projects;
-  return [...projects].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt));
+  const ordered = projects.every((p) => p.createdAt)
+    ? [...projects].sort((a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt))
+    : projects;
+  return prioritizeFeatured(ordered);
 }
 
 async function fetchRepoMap() {
@@ -288,13 +308,13 @@ function readBuildYear() {
 // ranked ones, so a repo added to PROJECT_GROUPS after the last build still
 // shows up instead of vanishing.
 function applyOrder(projects, order) {
-  if (!order || !order.length) return projects;
+  if (!order || !order.length) return prioritizeFeatured(projects);
   const rank = new Map(order.map((name, i) => [name, i]));
   const ranked = projects
     .filter((p) => rank.has(p.name))
     .sort((a, b) => rank.get(a.name) - rank.get(b.name));
   const rest = projects.filter((p) => !rank.has(p.name));
-  return [...ranked, ...rest];
+  return prioritizeFeatured([...ranked, ...rest]);
 }
 
 // Both post-fetch paths fall back to the order the build baked in, never to the
