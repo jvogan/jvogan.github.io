@@ -63,7 +63,7 @@ const PROJECT_GROUPS = [
 const FALLBACK_DETAILS = {
   "ox-driver": {
     displayName: "Ox Driver",
-    blurb: "Let your main coding agent assign work to independent agent harnesses and collect results from solo, parallel, or staged runs.",
+    blurb: "Let your main coding agent assign work to independent agent harnesses like Pi, OpenCode, OMP, and more.",
     tags: ["agent-skill", "multi-harness", "multi-agent"],
   },
   "a-fable-of-codexes": {
