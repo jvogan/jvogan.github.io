@@ -63,8 +63,8 @@ const PROJECT_GROUPS = [
 const FALLBACK_DETAILS = {
   "ox-driver": {
     displayName: "Ox Driver",
-    blurb: "Launch a fleet of OpenRouter Ox Alpha agents at max reasoning through Pi, directly or from Claude Code and Codex.",
-    tags: ["agent-skill", "openrouter", "multi-agent"],
+    blurb: "Let your main coding agent assign work to independent agent harnesses and collect results from solo, parallel, or staged runs.",
+    tags: ["agent-skill", "multi-harness", "multi-agent"],
   },
   "a-fable-of-codexes": {
     displayName: "A Fable of Codexes",
