@@ -8,7 +8,14 @@ const GITHUB_USER = "jvogan";
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
 const SOCIAL_PREVIEW_VERSION = "17";
-const FEATURED_PROJECTS = ["motif"];
+const FEATURED_PROJECTS = [
+  "structure-factory",
+  "motif",
+  "a-fable-of-codexes",
+  "small-molecules",
+  "genecluster",
+  "ox-driver",
+];
 
 // Featured repos by category. Order here controls section order on the page.
 // Any public repo NOT listed here is hidden, even if returned by the API.
