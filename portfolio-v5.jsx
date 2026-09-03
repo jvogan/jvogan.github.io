@@ -11,6 +11,7 @@ const SOCIAL_PREVIEW_VERSION = "17";
 const FEATURED_PROJECTS = [
   "structure-factory",
   "motif",
+  "codex-binder-lane",
   "a-fable-of-codexes",
   "small-molecules",
   "genecluster",
@@ -53,7 +54,7 @@ const PROJECT_GROUPS = [
     title: "BioTools",
     jp: "生命",
     blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["motif", "biovoice", "proteus"],
+    repos: ["motif", "codex-binder-lane", "biovoice", "proteus"],
   },
   {
     key: "agent-tools",
@@ -138,6 +139,11 @@ const FALLBACK_DETAILS = {
     displayName: "BioVoice",
     blurb: "Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.",
     tags: ["TypeScript", "alphafold", "molecular-visualization"],
+  },
+  "codex-binder-lane": {
+    displayName: "Codex Binder Lane",
+    blurb: "Design protein binders in Codex: pick target sites, tools, license, and budget, then get sequences and predicted structures.",
+    tags: ["Python", "binder-design", "codex"],
   },
   "proteus": {
     displayName: "Proteus",

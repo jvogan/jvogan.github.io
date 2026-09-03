@@ -31,6 +31,7 @@ The aim is to speed the pace of research so people can live healthier, longer li
 ## BioTools — bioinformatics, structural biology, lab tooling
 
 - [motif](https://github.com/jvogan/motif): A molecular biology workbench for Claude Science. View maps and alignments, make entries and notes, and more — all without leaving Claude Science. Overview: https://jvogan.github.io/motif-site/
+- [codex-binder-lane](https://github.com/jvogan/codex-binder-lane): Design protein binders in Codex: pick target sites, tools, license, and budget, then get sequences and predicted structures.
 - [biovoice](https://github.com/jvogan/biovoice): Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.
 - [proteus](https://github.com/jvogan/proteus): Structural biology superpowers for AI coding agents: PyMOL, ChimeraX, AlphaFold DB, RCSB PDB, UniProt, and Rosetta workflows.
 
