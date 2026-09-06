@@ -647,6 +647,33 @@ body::before {
   color: var(--ink-2);
   text-wrap: pretty;
 }
+.card-primary-link {
+  color: inherit;
+  text-decoration: none;
+}
+@media screen {
+  .card-primary-link::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+  .card-primary-link:focus-visible::after {
+    outline: 2px solid var(--red);
+    outline-offset: 3px;
+  }
+}
+.card-demo-link {
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  padding-block: 5px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--red);
+  text-underline-offset: 3px;
+}
+.card-demo-link:hover { color: var(--ink); }
 .card-foot {
   display: flex;
   align-items: flex-end;

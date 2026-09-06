@@ -11,6 +11,7 @@ const SOCIAL_PREVIEW_VERSION = "17";
 const FEATURED_PROJECTS = [
   "structure-factory",
   "motif",
+  "codex-surface-atlas",
   "codex-binder-lane",
   "a-fable-of-codexes",
   "small-molecules",
@@ -54,7 +55,7 @@ const PROJECT_GROUPS = [
     title: "BioTools",
     jp: "生命",
     blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["motif", "codex-binder-lane", "biovoice", "proteus"],
+    repos: ["motif", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
   },
   {
     key: "agent-tools",
@@ -145,6 +146,13 @@ const FALLBACK_DETAILS = {
     blurb: "Design protein binders in Codex: pick target sites, tools, license, and budget, then get sequences and predicted structures.",
     tags: ["Python", "binder-design", "codex"],
   },
+  "codex-surface-atlas": {
+    displayName: "Codex Surface Atlas",
+    blurb: "Discover cell-surface targets, screen molecules, and generate protein binders in Codex.",
+    tags: ["Python", "drug-discovery", "codex"],
+    previewImage: "media/social-previews/codex-surface-atlas.jpg",
+    demoHref: "https://surface-atlas-mucinous-colon.biomayflower.chatgpt.site",
+  },
   "proteus": {
     displayName: "Proteus",
     blurb: "Structural biology superpowers for AI coding agents: PyMOL, ChimeraX, AlphaFold DB, RCSB PDB, UniProt, and Rosetta workflows.",
@@ -220,6 +228,8 @@ function buildGroups(repoMap) {
             displayName: curated.displayName || base.displayName,
             blurb: curated.blurb || base.blurb,
             tags: curated.tags || base.tags,
+            previewImage: curated.previewImage,
+            demoHref: curated.demoHref,
             category: g.title,
             categoryKey: g.key,
             categoryJp: g.jp,
@@ -373,7 +383,7 @@ function ProjectCard({ project, index }) {
   const href = project.href || `https://github.com/${GITHUB_USER}/${project.name}`;
   // Use the repo's bundled social-preview banner first. GitHub's generated
   // OpenGraph card is only a fallback if a bundled preview is missing.
-  const localOg = `media/social-previews/${project.name}.webp?v=${SOCIAL_PREVIEW_VERSION}`;
+  const localOg = `${project.previewImage || `media/social-previews/${project.name}.webp`}?v=${SOCIAL_PREVIEW_VERSION}`;
   const ogOwner = project.owner || GITHUB_USER;
   const liveOg = `https://opengraph.githubassets.com/${OG_PREFIX}-${project.name}/${ogOwner}/${project.name}`;
   const onImgError = (e) => {
@@ -391,8 +401,13 @@ function ProjectCard({ project, index }) {
   // Curated entries carry a display name; the rest fall back to the repo slug,
   // which is set as code rather than as a serif product title.
   const isSlug = !project.displayName;
+  const title = project.displayName || project.name.replace(/-public$/, "");
+  // A card with a demo needs sibling links, so the repository and campaign
+  // remain separate destinations for pointer and keyboard navigation.
+  const Card = project.demoHref ? "article" : "a";
+  const cardLink = project.demoHref ? {} : { href, target: "_blank", rel: "noopener noreferrer" };
   return (
-    <a className="card" href={href} target="_blank" rel="noopener noreferrer">
+    <Card className="card" {...cardLink}>
       {project.category && (
         <span className="card-cat-tag">
           {project.category}
@@ -414,8 +429,17 @@ function ProjectCard({ project, index }) {
         />
       </div>
       <div className="card-body">
-        <h3 className={"card-title" + (isSlug ? " is-slug" : "")}>{project.displayName || project.name.replace(/-public$/, "")}</h3>
+        <h3 className={"card-title" + (isSlug ? " is-slug" : "")}>
+          {project.demoHref ? (
+            <a className="card-primary-link" href={href} target="_blank" rel="noopener noreferrer">{title}</a>
+          ) : title}
+        </h3>
         <p className="card-blurb">{project.blurb}</p>
+        {project.demoHref && (
+          <a className="card-demo-link" href={project.demoHref} target="_blank" rel="noopener noreferrer">
+            Explore example campaign <span aria-hidden="true">↗</span>
+          </a>
+        )}
         <div className="card-foot">
           <div className="card-tags">
             {project.tags.map((t) => (
@@ -425,7 +449,7 @@ function ProjectCard({ project, index }) {
           <span className="card-arrow">開 →</span>
         </div>
       </div>
-    </a>
+    </Card>
   );
 }
 
