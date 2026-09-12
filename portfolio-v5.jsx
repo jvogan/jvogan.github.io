@@ -548,6 +548,7 @@ function App() {
                 <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
                 <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok · Kimi</span></div>
                 <div className="row"><span className="label">Links <span lang="ja">リンク</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a> · <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a></span></div>
+                <div className="row"><span className="label">Support</span><span className="val"><a href={`https://github.com/sponsors/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">Sponsor my open-source work</a></span></div>
               </div>
             </div>
             <div className="hero-avatar-wrap">
