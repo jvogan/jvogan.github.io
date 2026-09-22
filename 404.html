@@ -14,16 +14,17 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@400;500&display=swap" rel="stylesheet" />
 
-  <script>(function(){try{if(localStorage.getItem("theme")==="light")document.documentElement.setAttribute("data-theme","light");}catch(e){}})();</script>
+  <script>(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
   <style>
     :root {
-      --bg: #0A0A0A;
-      --paper: #131313;
-      --ink: #F4F4F2;
-      --ink-2: #C9C9C6;
-      --ink-3: #8C8C88;
+      color-scheme: light;
+      --bg: #F3F4F5;
+      --paper: #FFFFFF;
+      --ink: #111111;
+      --ink-2: #333333;
+      --ink-3: #737373;
       --red: #C22118;
-      --hair: rgba(244, 244, 242, 0.16);
+      --hair: rgba(17, 17, 17, 0.14);
       --font-display: "Shippori Mincho B1", "Shippori Mincho", "Noto Serif JP", serif;
       --font-jp: "Noto Sans JP", "Shippori Mincho B1", sans-serif;
       --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -215,13 +216,25 @@
     @media (max-width: 640px) {
       .card { padding: 32px 28px; }
     }
-    :root[data-theme="light"] {
-      --bg: #F3F4F5;
-      --paper: #FFFFFF;
-      --ink: #111111;
-      --ink-2: #333333;
-      --ink-3: #737373;
-      --hair: rgba(17, 17, 17, 0.14);
+    @media (prefers-color-scheme: dark) {
+      :root:not([data-theme="light"]) {
+        color-scheme: dark;
+        --bg: #0A0A0A;
+        --paper: #131313;
+        --ink: #F4F4F2;
+        --ink-2: #C9C9C6;
+        --ink-3: #8C8C88;
+        --hair: rgba(244, 244, 242, 0.16);
+      }
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --bg: #0A0A0A;
+      --paper: #131313;
+      --ink: #F4F4F2;
+      --ink-2: #C9C9C6;
+      --ink-3: #8C8C88;
+      --hair: rgba(244, 244, 242, 0.16);
     }
   </style>
 </head>

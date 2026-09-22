@@ -654,21 +654,32 @@ function App() {
   );
 }
 
-// Dark / light switch. Dark is the default for everyone; light is an opt-in
-// stored in localStorage and restored by the head script in index.html before
-// first paint. The markup is static so the pre-rendered and hydrated trees
-// agree; CSS decides which label shows from html[data-theme].
+// Light / dark switch. With nothing pinned the page follows the system
+// setting (light when the system has no preference). A click pins the other
+// theme on html[data-theme] and in localStorage, and the head script in
+// index.html restores the pin before first paint. Pinning the theme the system
+// already shows clears the pin instead, so the page follows the system again.
+// The markup is static so the pre-rendered and hydrated trees agree; CSS
+// decides which label shows.
+const THEME_COLORS = { light: "#F3F4F5", dark: "#0A0A0A" };
 function ThemeToggle() {
   const onClick = () => {
     const root = document.documentElement;
-    const toLight = root.getAttribute("data-theme") !== "light";
-    if (toLight) root.setAttribute("data-theme", "light");
-    else root.removeAttribute("data-theme");
-    const meta = document.querySelector('meta[name="theme-color"]');
-    if (meta) meta.setAttribute("content", toLight ? "#F3F4F5" : "#0A0A0A");
+    const systemDark = !!(window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    const pinned = root.getAttribute("data-theme");
+    const isDark = pinned ? pinned === "dark" : systemDark;
+    const next = isDark ? "light" : "dark";
+    const followsSystem = next === (systemDark ? "dark" : "light");
+    if (followsSystem) root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", next);
+    // One theme-color meta per scheme; a pin paints both with the pinned colour.
+    document.querySelectorAll('meta[name="theme-color"]').forEach((m) => {
+      const own = /dark/.test(m.getAttribute("media") || "") ? "dark" : "light";
+      m.setAttribute("content", THEME_COLORS[followsSystem ? own : next]);
+    });
     try {
-      if (toLight) localStorage.setItem("theme", "light");
-      else localStorage.removeItem("theme");
+      if (followsSystem) localStorage.removeItem("theme");
+      else localStorage.setItem("theme", next);
     } catch (_) {
       // Storage may be unavailable; the choice still applies for this page.
     }
