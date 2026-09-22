@@ -483,6 +483,10 @@ function App() {
         <div className="topbar">
           <div className="topbar-left">
             <span>J.VOGAN · <span lang="ja">記録</span></span>
+            <span className="hero-lead">
+              <span className="rule" />
+              <span>BIO × AI · RESEARCH ↔ AGENTS · LAB-IN-THE-LOOP</span>
+            </span>
           </div>
           <div className="topbar-right">
             <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -492,11 +496,6 @@ function App() {
         </div>
 
         <header className="hero" id="main">
-          <div className="hero-lead">
-            <span className="rule" />
-            <span>BIO × AI · RESEARCH ↔ AGENTS · LAB-IN-THE-LOOP</span>
-          </div>
-
           <div className="hero-top">
             <h1 className="hero-name">
               Jacob<br />
