@@ -8,7 +8,7 @@ The aim is to speed the pace of research so people can live healthier, longer li
 - Profile: https://github.com/jvogan
 - Site: https://jvogan.github.io/
 - Elsewhere: https://houseofvogan.com/ · https://biosymphony.github.io/ · https://huggingface.co/JacobMolBio
-- Stack: Claude Code, Codex, Gemini, Grok, Kimi
+- Stack: Claude Code, Codex, Gemini, Grok, Muse
 
 ## Orchestration — agent orchestration, Symphony, Linear, and cloud compute
 
