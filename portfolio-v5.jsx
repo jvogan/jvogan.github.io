@@ -653,25 +653,21 @@ function App() {
   );
 }
 
-// Light / dark switch. The markup is static so the pre-rendered and hydrated
-// trees agree; CSS decides which label shows from html[data-theme] or the
-// system preference. The head script in index.html restores the saved choice
-// before first paint. Choosing the system's own theme clears the override so
-// the page follows the system again.
+// Dark / light switch. Dark is the default for everyone; light is an opt-in
+// stored in localStorage and restored by the head script in index.html before
+// first paint. The markup is static so the pre-rendered and hydrated trees
+// agree; CSS decides which label shows from html[data-theme].
 function ThemeToggle() {
   const onClick = () => {
     const root = document.documentElement;
-    const sys =
-      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light";
-    const cur = root.getAttribute("data-theme") || sys;
-    const next = cur === "dark" ? "light" : "dark";
-    if (next === sys) root.removeAttribute("data-theme");
-    else root.setAttribute("data-theme", next);
+    const toLight = root.getAttribute("data-theme") !== "light";
+    if (toLight) root.setAttribute("data-theme", "light");
+    else root.removeAttribute("data-theme");
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", toLight ? "#F3F4F5" : "#0A0A0A");
     try {
-      if (next === sys) localStorage.removeItem("theme");
-      else localStorage.setItem("theme", next);
+      if (toLight) localStorage.setItem("theme", "light");
+      else localStorage.removeItem("theme");
     } catch (_) {
       // Storage may be unavailable; the choice still applies for this page.
     }

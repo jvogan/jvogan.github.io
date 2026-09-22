@@ -1,25 +1,28 @@
+/* NERV by default: black ground, white Mincho, title-card red. The reader
+   can switch to the light paper with the top-bar toggle, which sets
+   html[data-theme="light"]. */
 :root {
-  --bg: #F3F4F5;         /* neutral near-white, no cream */
-  --paper: #FFFFFF;
-  --ink: #111111;
-  --ink-2: #333333;
-  --ink-3: #737373;   /* darker than the cream-era grey so small labels hold on white */
-  --hair: rgba(17, 17, 17, 0.14);
-  --hair-strong: rgba(17, 17, 17, 0.32);
+  --bg: #0A0A0A;
+  --paper: #131313;
+  --ink: #F4F4F2;
+  --ink-2: #C9C9C6;
+  --ink-3: #8C8C88;
+  --hair: rgba(244, 244, 242, 0.16);
+  --hair-strong: rgba(244, 244, 242, 0.36);
   /* Hatched placeholder for banners that have not painted yet — reads as a
      deliberate blank plate rather than a hole in the grid. */
   --hatch: repeating-linear-gradient(
     -45deg,
     transparent 0 6px,
-    rgba(17, 17, 17, 0.05) 6px 7px
+    rgba(244, 244, 242, 0.06) 6px 7px
   );
 
   --red: #C22118;       /* NERV / Eva title red */
   --red-deep: #8A130C;
 
-  --grain: rgba(0, 0, 0, 0.025);   /* paper grain dots */
-  --lift: var(--ink);              /* card / video lift shadow */
-  --video-bg: #0d0d0d;
+  --grain: rgba(255, 255, 255, 0.035);   /* paper grain dots */
+  --lift: var(--red);                    /* card / video lift shadow */
+  --video-bg: #000;
 
   --font-display: "Shippori Mincho B1", "Shippori Mincho", "Kaisei HarunoUmi", "Noto Serif JP", serif;
   --font-jp: "Noto Sans JP", "Noto Serif JP", "Shippori Mincho B1", sans-serif;
@@ -804,45 +807,24 @@ body::before {
   }
 }
 
-/* ---------- NERV (dark) ----------
-   Black ground, white Mincho, same red, as on the title cards. Applies when
-   the reader chose it (html[data-theme="dark"]) or when the system prefers
-   dark and the reader has not chosen light. */
-:root[data-theme="dark"] {
-    --bg: #0A0A0A;
-    --paper: #131313;
-    --ink: #F4F4F2;
-    --ink-2: #C9C9C6;
-    --ink-3: #8C8C88;
-    --hair: rgba(244, 244, 242, 0.16);
-    --hair-strong: rgba(244, 244, 242, 0.36);
-    --hatch: repeating-linear-gradient(
-      -45deg,
-      transparent 0 6px,
-      rgba(244, 244, 242, 0.06) 6px 7px
-    );
-    --grain: rgba(255, 255, 255, 0.035);
-    --lift: var(--red);
-    --video-bg: #000;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-      --bg: #0A0A0A;
-      --paper: #131313;
-      --ink: #F4F4F2;
-      --ink-2: #C9C9C6;
-      --ink-3: #8C8C88;
-      --hair: rgba(244, 244, 242, 0.16);
-      --hair-strong: rgba(244, 244, 242, 0.36);
-      --hatch: repeating-linear-gradient(
-        -45deg,
-        transparent 0 6px,
-        rgba(244, 244, 242, 0.06) 6px 7px
-      );
-      --grain: rgba(255, 255, 255, 0.035);
-      --lift: var(--red);
-      --video-bg: #000;
-  }
+/* ---------- Paper (light) ----------
+   Neutral near-white, no cream. Chosen with the top-bar toggle. */
+:root[data-theme="light"] {
+  --bg: #F3F4F5;
+  --paper: #FFFFFF;
+  --ink: #111111;
+  --ink-2: #333333;
+  --ink-3: #737373;
+  --hair: rgba(17, 17, 17, 0.14);
+  --hair-strong: rgba(17, 17, 17, 0.32);
+  --hatch: repeating-linear-gradient(
+    -45deg,
+    transparent 0 6px,
+    rgba(17, 17, 17, 0.05) 6px 7px
+  );
+  --grain: rgba(0, 0, 0, 0.025);
+  --lift: var(--ink);
+  --video-bg: #0d0d0d;
 }
 
 /* Theme toggle in the top bar: the label names the theme it switches to. */
@@ -860,10 +842,6 @@ body::before {
 }
 .theme-toggle:hover,
 .theme-toggle:focus-visible { color: var(--red); border-color: var(--red); }
-.theme-toggle .to-light { display: none; }
-:root[data-theme="dark"] .theme-toggle .to-dark { display: none; }
-:root[data-theme="dark"] .theme-toggle .to-light { display: inline; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle .to-dark { display: none; }
-  :root:not([data-theme="light"]) .theme-toggle .to-light { display: inline; }
-}
+.theme-toggle .to-dark { display: none; }
+:root[data-theme="light"] .theme-toggle .to-dark { display: inline; }
+:root[data-theme="light"] .theme-toggle .to-light { display: none; }

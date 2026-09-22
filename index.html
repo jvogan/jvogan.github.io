@@ -8,8 +8,7 @@
   <!-- Description + canonical -->
   <meta name="description" content="Jacob Vogan. Bio × AI. Building AI tools to help biological research, including agentic systems for bioinformatics, structural biology, biomanufacturing, and automated labs." />
   <meta name="author" content="Jacob Vogan" />
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#F3F4F5" />
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#0A0A0A" />
+  <meta name="theme-color" content="#0A0A0A" />
   <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
   <meta name="referrer" content="strict-origin-when-cross-origin" />
   <link rel="canonical" href="https://jvogan.github.io/" />
@@ -51,8 +50,8 @@
   <link rel="preload" as="image" href="media/social-previews/small-molecules.webp?v=17" type="image/webp" />
 
   <!-- Restore the reader's light/dark choice before the first paint. -->
-  <script>(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();</script>
-  <link rel="stylesheet" href="portfolio-v5.css?v=24" />
+  <script>(function(){try{if(localStorage.getItem("theme")==="light"){document.documentElement.setAttribute("data-theme","light");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#F3F4F5");}}catch(e){}})();</script>
+  <link rel="stylesheet" href="portfolio-v5.css?v=25" />
 
   <!-- React 18.3.1 UMD builds, served from this repo. build.sh refreshes these
        from node_modules, so they track the versions pinned in package.json.
@@ -116,6 +115,6 @@
     <!--prerender:end-->
 
   <script defer src="tweaks-stub.js?v=16"></script>
-  <script defer src="portfolio-v5.js?v=24"></script>
+  <script defer src="portfolio-v5.js?v=25"></script>
 </body>
 </html>
