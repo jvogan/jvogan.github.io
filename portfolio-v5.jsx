@@ -23,18 +23,11 @@ const FEATURED_PROJECTS = [
 // Any public repo NOT listed here is hidden, even if returned by the API.
 const PROJECT_GROUPS = [
   {
-    key: "orchestration",
-    title: "Orchestration",
-    jp: "指揮",
-    blurb: "Agent orchestration · Symphony · Linear · cloud compute",
-    repos: [
-      "ox-driver",
-      "a-fable-of-codexes",
-      "symphony-linear-starter",
-      "symphony-claude-lane",
-      "symphony-neocloud-bridge",
-      "telegram-codex-bridge",
-    ],
+    key: "biotools",
+    title: "BioTools",
+    jp: "生命",
+    blurb: "Bioinformatics, structural biology, lab tooling",
+    repos: ["motif", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
   },
   {
     key: "biosymphony",
@@ -51,11 +44,18 @@ const PROJECT_GROUPS = [
     ],
   },
   {
-    key: "biotools",
-    title: "BioTools",
-    jp: "生命",
-    blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["motif", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
+    key: "orchestration",
+    title: "Orchestration",
+    jp: "指揮",
+    blurb: "Agent orchestration · Symphony · Linear · cloud compute",
+    repos: [
+      "ox-driver",
+      "a-fable-of-codexes",
+      "symphony-linear-starter",
+      "symphony-claude-lane",
+      "symphony-neocloud-bridge",
+      "telegram-codex-bridge",
+    ],
   },
   {
     key: "agent-tools",
@@ -503,6 +503,7 @@ function App() {
             <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a>
             <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a>
             <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a>
+            <ThemeToggle />
           </div>
         </div>
 
@@ -544,7 +545,7 @@ function App() {
           <div className="hero-body">
             <div>
               <p className="hero-bio">
-                <strong>Bio × AI.</strong> Building AI tools for life
+                Building AI tools for life
                 science research, including agentic systems for
                 bioinformatics, structural biology, biomanufacturing, and
                 automated labs. AI progress will ideally speed up the pace
@@ -556,7 +557,6 @@ function App() {
                 general-purpose AI agent skills.
               </p>
               <div className="hero-meta">
-                <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
                 <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
                 <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok · Muse</span></div>
               </div>
@@ -650,6 +650,37 @@ function App() {
         </TweakSection>
       </TweaksPanel>
     </div>
+  );
+}
+
+// Light / dark switch. The markup is static so the pre-rendered and hydrated
+// trees agree; CSS decides which label shows from html[data-theme] or the
+// system preference. The head script in index.html restores the saved choice
+// before first paint. Choosing the system's own theme clears the override so
+// the page follows the system again.
+function ThemeToggle() {
+  const onClick = () => {
+    const root = document.documentElement;
+    const sys =
+      window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    const cur = root.getAttribute("data-theme") || sys;
+    const next = cur === "dark" ? "light" : "dark";
+    if (next === sys) root.removeAttribute("data-theme");
+    else root.setAttribute("data-theme", next);
+    try {
+      if (next === sys) localStorage.removeItem("theme");
+      else localStorage.setItem("theme", next);
+    } catch (_) {
+      // Storage may be unavailable; the choice still applies for this page.
+    }
+  };
+  return (
+    <button type="button" className="theme-toggle" onClick={onClick} aria-label="Switch between light and dark">
+      <span className="to-dark"><span lang="ja">夜</span> Dark</span>
+      <span className="to-light"><span lang="ja">昼</span> Light</span>
+    </button>
   );
 }
 
