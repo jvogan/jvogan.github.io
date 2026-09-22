@@ -377,124 +377,9 @@ function useProjects() {
 }
 
 // -------------------------------------------------------------
-// Plate map
-// -------------------------------------------------------------
-// A 24-well plate: one row per project group, six columns, one well per
-// public repo. Wells are assigned in display order, so A1 is the first
-// Orchestration card on the page and the coordinate on each card points back
-// here. A group that outgrows six repos widens the plate rather than dropping
-// a well.
-const PLATE_COLS = 6;
-
-function rowLetter(r) {
-  return String.fromCharCode(65 + r);
-}
-
-function assignWells(projects) {
-  const rowOf = new Map(PROJECT_GROUPS.map((g, i) => [g.key, i]));
-  const counts = new Map();
-  const wells = {};
-  for (const p of projects) {
-    const row = rowOf.get(p.categoryKey);
-    if (row === undefined) continue;
-    const col = counts.get(row) || 0;
-    counts.set(row, col + 1);
-    wells[p.name] = { row, col, coord: `${rowLetter(row)}${col + 1}` };
-  }
-  const cols = Math.max(PLATE_COLS, ...counts.values());
-  return { wells, cols, rows: PROJECT_GROUPS.length, filled: Object.keys(wells).length };
-}
-
-function Plate({ projects, plate, activeName, onHover, onPick }) {
-  const byCell = new Map();
-  for (const p of projects) {
-    const w = plate.wells[p.name];
-    if (w) byCell.set(`${w.row}:${w.col}`, { project: p, ...w });
-  }
-  const active = activeName ? projects.find((p) => p.name === activeName) : null;
-  const activeCoord = active && plate.wells[active.name] ? plate.wells[active.name].coord : null;
-  const total = plate.rows * plate.cols;
-  return (
-    <div className="hero-plate">
-      <div className="plate">
-        <div className="plate-face">
-          <div
-            className="plate-grid"
-            style={{ "--cols": plate.cols }}
-            role="group"
-            aria-label="Plate map: one well per public repository, one row per group"
-          >
-            <span aria-hidden="true" />
-            {Array.from({ length: plate.cols }, (_, c) => (
-              <span key={`c${c}`} className="plate-col" aria-hidden="true">{c + 1}</span>
-            ))}
-            {PROJECT_GROUPS.map((g, r) => (
-              <React.Fragment key={g.key}>
-                <span className="plate-row" aria-hidden="true">{rowLetter(r)}</span>
-                {Array.from({ length: plate.cols }, (_, c) => {
-                  const cell = byCell.get(`${r}:${c}`);
-                  if (!cell) {
-                    return <span key={`${r}:${c}`} className="well is-empty" aria-hidden="true" />;
-                  }
-                  const p = cell.project;
-                  const title = p.displayName || p.name;
-                  return (
-                    <button
-                      key={p.name}
-                      type="button"
-                      className={"well is-filled" + (activeName === p.name ? " is-active" : "")}
-                      data-group={p.categoryKey}
-                      style={{ "--i": r * plate.cols + c }}
-                      aria-label={`${cell.coord}: ${title}, ${p.category}. Jump to card.`}
-                      onMouseEnter={() => onHover(p.name)}
-                      onMouseLeave={() => onHover(null)}
-                      onFocus={() => onHover(p.name)}
-                      onBlur={() => onHover(null)}
-                      onClick={() => onPick(p.name)}
-                    >
-                      <span className="well-liquid" aria-hidden="true" />
-                    </button>
-                  );
-                })}
-              </React.Fragment>
-            ))}
-          </div>
-        </div>
-      </div>
-      <div className="plate-readout">
-        <span className={"mono readout-coord" + (activeCoord ? "" : " is-empty")}>
-          {activeCoord || "—"}
-        </span>
-        {active ? (
-          <span>
-            <span className="mono">{active.displayName || active.name}</span> · {active.category}
-          </span>
-        ) : (
-          <span>
-            <span className="mono">{plate.filled} / {total}</span> wells filled · hover or tap a well to read it
-          </span>
-        )}
-      </div>
-      <ul className="plate-legend">
-        {PROJECT_GROUPS.map((g, r) => {
-          const n = projects.filter((p) => p.categoryKey === g.key).length;
-          return (
-            <li key={g.key} data-group={g.key}>
-              <span className="swatch" aria-hidden="true" />
-              <span>Row {rowLetter(r)} · {g.title}</span>
-              <span className="count">{n}</span>
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
-}
-
-// -------------------------------------------------------------
 // Card
 // -------------------------------------------------------------
-function ProjectCard({ project, index, coord, isActive, onHover }) {
+function ProjectCard({ project, index }) {
   const href = project.href || `https://github.com/${GITHUB_USER}/${project.name}`;
   // Use the repo's bundled social-preview banner first. GitHub's generated
   // OpenGraph card is only a fallback if a bundled preview is missing.
@@ -514,7 +399,7 @@ function ProjectCard({ project, index, coord, isActive, onHover }) {
     if (el && el.complete && el.naturalWidth > 0) el.classList.add("is-loaded");
   };
   // Curated entries carry a display name; the rest fall back to the repo slug,
-  // which is set as code rather than as a product title.
+  // which is set as code rather than as a serif product title.
   const isSlug = !project.displayName;
   const title = project.displayName || project.name.replace(/-public$/, "");
   // A card with a demo needs sibling links, so the repository and campaign
@@ -522,22 +407,15 @@ function ProjectCard({ project, index, coord, isActive, onHover }) {
   const Card = project.demoHref ? "article" : "a";
   const cardLink = project.demoHref ? {} : { href, target: "_blank", rel: "noopener noreferrer" };
   return (
-    <Card
-      className={"card" + (isActive ? " is-active" : "")}
-      id={`repo-${project.name}`}
-      data-group={project.categoryKey}
-      onMouseEnter={() => onHover(project.name)}
-      onMouseLeave={() => onHover(null)}
-      {...cardLink}
-    >
-      <div className="card-head">
-        <span className="card-well">
-          <span className="card-dot" aria-hidden="true" />
-          <span className="mono">{coord}</span>
+    <Card className="card" {...cardLink}>
+      {project.category && (
+        <span className="card-cat-tag">
+          {project.category}
+          {project.categoryJp && (
+            <span className="card-cat-jp" lang="ja"> · {project.categoryJp}</span>
+          )}
         </span>
-        <span className="card-cat">{project.category}</span>
-        <span className="card-open" aria-hidden="true">↗</span>
-      </div>
+      )}
       <div className="card-banner">
         <img
           className="card-og"
@@ -562,10 +440,13 @@ function ProjectCard({ project, index, coord, isActive, onHover }) {
             Explore example campaign <span aria-hidden="true">↗</span>
           </a>
         )}
-        <div className="card-tags">
-          {project.tags.map((t) => (
-            <span key={t} className="tag">{t}</span>
-          ))}
+        <div className="card-foot">
+          <div className="card-tags">
+            {project.tags.map((t) => (
+              <span key={t} className="tag">{t}</span>
+            ))}
+          </div>
+          <span className="card-arrow">開 →</span>
         </div>
       </div>
     </Card>
@@ -576,152 +457,129 @@ function ProjectCard({ project, index, coord, isActive, onHover }) {
 // App
 // -------------------------------------------------------------
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/{
+  "accent": "vermillion",
   "density": "roomy"
 }/*EDITMODE-END*/;
 
+const ACCENTS = {
+  vermillion: { hex: "#C22118", label: "朱" },        // Vermillion
+  persimmon:  { hex: "#E25822", label: "柿" },        // Persimmon
+  sumi:       { hex: "#111111", label: "墨" },        // Ink (sumi)
+  coral:      { hex: "#D96B5A", label: "珊瑚" },   // Coral
+};
+
 function App() {
   const [tweaks, setTweak] = useTweaks(TWEAK_DEFAULTS);
+  const accent = (ACCENTS[tweaks.accent] || ACCENTS.vermillion).hex;
+
   const { projects } = useProjects();
   const isDesktop = useIsDesktop();
-  const reduced = usePrefersReducedMotion();
-  const list = projects || [];
-  const plate = useMemo(() => assignWells(list), [list]);
 
-  // Hovering a well rings its card; hovering a card lights its well. The
-  // source is tracked so a plain card hover does not ring the card itself.
-  const [active, setActive] = useState(null);
-  const hoverFromPlate = (name) => setActive(name ? { name, from: "plate" } : null);
-  const hoverFromCard = (name) => setActive(name ? { name, from: "card" } : null);
-  const activeName = active ? active.name : null;
-  const pick = (name) => {
-    const el = document.getElementById(`repo-${name}`);
-    if (!el) return;
-    el.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
-    const link = el.matches("a") ? el : el.querySelector("a");
-    if (link) link.focus({ preventScroll: true });
-  };
+  const style = useMemo(() => ({ "--red": accent, "--red-deep": accent }), [accent]);
 
   return (
-    <div className="page" data-density={tweaks.density}>
+    <div className="page" style={style} data-density={tweaks.density}>
       <div className="page-inner">
         <div className="topbar">
           <div className="topbar-left">
-            <span className="topbar-name">Jacob Vogan</span>
-            <span className="sep" aria-hidden="true">/</span>
-            <span>Bio × AI</span>
+            <span>J.VOGAN · <span lang="ja">記録</span></span>
           </div>
           <div className="topbar-right">
-            <Pipeline />
+            <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a>
+            <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a>
+            <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a>
           </div>
         </div>
 
         <header className="hero" id="main">
-          <div className="hero-main">
-            <p className="eyebrow">
-              <span className="eyebrow-dot" aria-hidden="true" />
-              <span>Bio × AI · Research ↔ Agents · Lab-in-the-loop</span>
-            </p>
-            <h1 className="hero-name">Jacob<br />Vogan</h1>
-            <p className="hero-bio">
-              <strong>Bio × AI.</strong> Building AI tools for life
-              science research, including agentic systems for
-              bioinformatics, structural biology, biomanufacturing, and
-              automated labs. AI progress will ideally speed up the pace
-              of research so people can live healthier, longer lives.
-            </p>
-            <p className="hero-bio hero-bio-secondary">
-              Shared repos include harnesses for long-running multi-agent
-              work, molecular biology suite tools for researchers, and
-              general-purpose AI agent skills.
-            </p>
+          <div className="hero-lead">
+            <span className="rule" />
+            <span>BIO × AI · RESEARCH ↔ AGENTS · LAB-IN-THE-LOOP</span>
           </div>
-          <div className="hero-side">
-            <Plate
-              projects={list}
-              plate={plate}
-              activeName={activeName}
-              onHover={hoverFromPlate}
-              onPick={pick}
-            />
-              <dl className="hero-meta">
-                <dt>Focus</dt>
-                <dd className="accent">Bio × AI</dd>
-                <dt>Working on</dt>
-                <dd>Super powers for biological progress</dd>
-                <dt>Stack</dt>
-                <dd>Claude Code · Codex · Gemini · Grok · Kimi</dd>
-                <dt>Links</dt>
-                <dd>
-                  <a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a>
-                  {" · "}
-                  <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a>
-                  {" · "}
-                  <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a>
-                </dd>
-              </dl>
+
+          <div className="hero-top">
+            <h1 className="hero-name">
+              Jacob<br />
+              <span className="red">Vogan</span>
+            </h1>
+            {isDesktop && (
+              <figure className="hero-video-figure">
+                <a
+                  className="hero-video"
+                  href="https://github.com/jvogan"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Pixel-art loop: Jacob and his AI agents — Claude as a crab, Codex as a drone — fighting off pathogens, disease, and monstrous threats inside a research lab."
+                >
+                  <video
+                    src="media/lab-runner.mp4"
+                    poster="media/lab-runner-poster.jpg"
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    preload="metadata"
+                    aria-hidden="true"
+                  />
+                </a>
+                <figcaption className="hero-video-caption">
+                  Lab Runner · J.V. + Claude <span className="muted">(crab)</span> + Codex <span className="muted">(drone)</span> vs. pathogens.
+                </figcaption>
+              </figure>
+            )}
+          </div>
+
+          <div className="hero-jp"><span className="jp" lang="ja">生命の特異点</span> ／ <span lang="la">Singularitas biologica</span></div>
+
+          <div className="hero-body">
+            <div>
+              <p className="hero-bio">
+                <strong>Bio × AI.</strong> Building AI tools for life
+                science research, including agentic systems for
+                bioinformatics, structural biology, biomanufacturing, and
+                automated labs. AI progress will ideally speed up the pace
+                of research so people can live healthier, longer lives.
+              </p>
+              <p className="hero-bio hero-bio-secondary">
+                Shared repos include harnesses for long-running multi-agent
+                work, molecular biology suite tools for researchers, and
+                general-purpose AI agent skills.
+              </p>
+              <div className="hero-meta">
+                <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
+                <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
+                <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok · Kimi</span></div>
+                <div className="row"><span className="label">Links <span lang="ja">リンク</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a> · <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a></span></div>
+              </div>
+            </div>
+            <div className="hero-avatar-wrap">
+              <img
+                className="hero-avatar"
+                src={`https://github.com/${GITHUB_USER}.png?size=480`}
+                alt="Jacob Vogan"
+                referrerPolicy="no-referrer"
+              />
+              <div className="hero-avatar-caption">
+                <span>J.V. · 2026</span>
+                <span className="r">●</span>
+              </div>
+            </div>
           </div>
         </header>
 
-        <section className="bench" aria-label="Lab Runner loop and portrait">
-          <figure className="bench-video-figure">
-            <a
-              className="bench-video"
-              href={`https://github.com/${GITHUB_USER}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="Pixel-art loop: Jacob and his AI agents — Claude as a crab, Codex as a drone — fighting off pathogens, disease, and monstrous threats inside a research lab."
-            >
-              {isDesktop ? (
-                <video
-                  src="media/lab-runner.mp4"
-                  poster="media/lab-runner-poster.jpg"
-                  autoPlay
-                  loop
-                  muted
-                  playsInline
-                  preload="metadata"
-                  aria-hidden="true"
-                />
-              ) : (
-                <img src="media/lab-runner-poster.jpg" alt="" loading="lazy" decoding="async" />
-              )}
-            </a>
-            <figcaption>
-              <span>Lab Runner · J.V. + Claude <span className="muted">(crab)</span> + Codex <span className="muted">(drone)</span> vs. pathogens</span>
-              <span className="muted">Loop</span>
-            </figcaption>
-          </figure>
-          <figure className="bench-portrait-figure">
-            <img
-              className="bench-portrait"
-              src={`https://github.com/${GITHUB_USER}.png?size=480`}
-              alt="Jacob Vogan"
-              referrerPolicy="no-referrer"
-            />
-            <figcaption>
-              <span>J.V.</span>
-              <span className="muted">{readBuildYear()}</span>
-            </figcaption>
-          </figure>
-        </section>
-
         <div className="section-head">
-          <h2 className="section-title">Selected repos</h2>
+          <h2 className="section-title">
+            <span>Projects</span>
+            <span className="ep"><span lang="ja">作品</span> · SELECTED REPOS</span>
+          </h2>
           <div className="section-meta">
-            <span className="mono">{plate.filled} / {plate.rows * plate.cols}</span> wells · featured first, then newest
+            <em lang="la">Tempore dato, quid agendum.</em>
           </div>
         </div>
 
         <div className="grid">
-          {list.map((p, i) => (
-            <ProjectCard
-              key={p.name}
-              project={p}
-              index={i}
-              coord={plate.wells[p.name] ? plate.wells[p.name].coord : "—"}
-              isActive={!!active && active.from === "plate" && active.name === p.name}
-              onHover={hoverFromCard}
-            />
+          {(projects || []).map((p, i) => (
+            <ProjectCard key={p.name} project={p} index={i} />
           ))}
         </div>
 
@@ -741,6 +599,18 @@ function App() {
       </div>
 
       <TweaksPanel title="Tweaks">
+        <TweakSection title="Accent">
+          <TweakRadio
+            value={tweaks.accent}
+            onChange={(v) => setTweak("accent", v)}
+            options={[
+              { value: "vermillion", label: "Vermillion" },
+              { value: "persimmon",  label: "Persimmon"  },
+              { value: "coral",      label: "Coral"      },
+              { value: "sumi",       label: "Sumi (ink)" },
+            ]}
+          />
+        </TweakSection>
         <TweakSection title="Density">
           <TweakRadio
             value={tweaks.density}
@@ -756,49 +626,9 @@ function App() {
   );
 }
 
-function Pipeline() {
-  // Long-horizon agent harness: goal → plan → swarm → grade → iterate.
-  // One node lights at a time, walking the cycle so the topbar reads as the
-  // harness doing its work in real time.
-  const NODES = ["goal", "plan", "swarm", "grade", "iterate"];
-  const [active, setActive] = useState(0);
-  const reduced = usePrefersReducedMotion();
-  useEffect(() => {
-    if (reduced) return;
-    const id = setInterval(() => setActive((i) => (i + 1) % NODES.length), 1400);
-    return () => clearInterval(id);
-  }, [reduced]);
-  return (
-    <span className="pipeline" aria-label={"agent harness loop, current step: " + NODES[active]}>
-      {NODES.map((n, i) => (
-        <React.Fragment key={i}>
-          <span
-            className={"pipe-node" + (i === active ? " on" : "")}
-            aria-current={i === active ? "step" : undefined}
-          >{n}</span>
-          {i < NODES.length - 1 && <span className="pipe-arrow" aria-hidden="true">→</span>}
-        </React.Fragment>
-      ))}
-    </span>
-  );
-}
-
-function usePrefersReducedMotion() {
-  const [reduced, setReduced] = useState(false);
-  useEffect(() => {
-    if (typeof window === "undefined" || !window.matchMedia) return;
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReduced(mq.matches);
-    const on = (e) => setReduced(e.matches);
-    mq.addEventListener?.("change", on);
-    return () => mq.removeEventListener?.("change", on);
-  }, []);
-  return reduced;
-}
-
 // Default false so mobile-first SSR/initial paint never includes the video
-// element (and never triggers the 1.8 MB MP4 fetch on phones). The poster
-// image holds the slot until the effect flips it true on desktop.
+// element (and never triggers the 1.8 MB MP4 fetch on phones). The effect
+// flips it true on desktop after hydration.
 function useIsDesktop() {
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {

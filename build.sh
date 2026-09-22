@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Compile JSX -> plain JS so the live site doesn't have to ship Babel Standalone,
 # then pre-render the app into index.html.
-# Run after editing portfolio-v6.jsx or tweaks-stub.jsx, before commit.
+# Run after editing portfolio-v5.jsx or tweaks-stub.jsx, before commit.
 set -euo pipefail
 cd "$(dirname "$0")"
 
@@ -32,14 +32,14 @@ npx esbuild tweaks-stub.jsx \
   --minify \
   --outfile=tweaks-stub.js
 
-npx esbuild portfolio-v6.jsx \
+npx esbuild portfolio-v5.jsx \
   --loader:.jsx=jsx \
   --jsx=transform \
   --jsx-factory=React.createElement \
   --jsx-fragment=React.Fragment \
   --minify \
-  --outfile=portfolio-v6.js
+  --outfile=portfolio-v5.js
 
 node prerender.mjs
 
-echo "built: $(ls -la tweaks-stub.js portfolio-v6.js index.html | awk '{print $5, $9}')"
+echo "built: $(ls -la tweaks-stub.js portfolio-v5.js index.html | awk '{print $5, $9}')"
