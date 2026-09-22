@@ -6,7 +6,7 @@
  * markup into index.html between the prerender markers. The browser hydrates
  * onto that markup rather than replacing it.
  *
- * portfolio-v5.jsx and tweaks-stub.jsx are classic scripts, not modules — they
+ * portfolio-v6.jsx and tweaks-stub.jsx are classic scripts, not modules — they
  * expect React, ReactDOM and the tweak stubs as ambient globals. Rather than
  * restructure them into ESM (which would change what ships to the browser),
  * each is transformed with esbuild and evaluated inside a `new Function` whose
@@ -62,7 +62,7 @@ function loadTweakStubs() {
 }
 
 /**
- * Evaluate portfolio-v5.jsx. `ReactDOM` is intentionally undefined — the file's
+ * Evaluate portfolio-v6.jsx. `ReactDOM` is intentionally undefined — the file's
  * mount block is guarded on `typeof document`, which is absent under Node, so
  * it never runs. `__INITIAL_ORDER__` is the ordering the client reads back out
  * of the JSON script tag; passing it here keeps the two first renders equal.
@@ -77,7 +77,7 @@ function loadApp(stubs, initialOrder) {
     "TweakRadio",
     "__INITIAL_ORDER__",
     "__BUILD_YEAR__",
-    compile("portfolio-v5.jsx") +
+    compile("portfolio-v6.jsx") +
       "\nreturn { App, fetchRepoMap, buildGroups, flattenGroups, sortByCreated };"
   );
   return factory(
