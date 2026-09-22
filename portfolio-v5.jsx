@@ -429,11 +429,11 @@ function ProjectCard({ project, index }) {
         />
       </div>
       <div className="card-body">
-        <h3 className={"card-title" + (isSlug ? " is-slug" : "")}>
+        <h4 className={"card-title" + (isSlug ? " is-slug" : "")}>
           {project.demoHref ? (
             <a className="card-primary-link" href={href} target="_blank" rel="noopener noreferrer">{title}</a>
           ) : title}
-        </h3>
+        </h4>
         <p className="card-blurb">{project.blurb}</p>
         {project.demoHref && (
           <a className="card-demo-link" href={project.demoHref} target="_blank" rel="noopener noreferrer">
@@ -451,6 +451,17 @@ function ProjectCard({ project, index }) {
       </div>
     </Card>
   );
+}
+
+// Episode title cards: the flat, sorted list is dealt back into its groups so
+// each group reads as one episode. Order within an episode is the page order
+// (featured first, then newest). Old-style numerals as on the title cards.
+const EPISODE_NUMERALS = ["壱", "弐", "参", "四", "伍", "六", "七", "八"];
+
+function groupProjects(projects) {
+  return PROJECT_GROUPS
+    .map((g) => ({ ...g, projects: projects.filter((p) => p.categoryKey === g.key) }))
+    .filter((g) => g.projects.length > 0);
 }
 
 // -------------------------------------------------------------
@@ -548,7 +559,6 @@ function App() {
                 <div className="row"><span className="label">Focus <span lang="ja">専門</span></span><span className="val red">BIO × AI</span></div>
                 <div className="row"><span className="label">Working on <span lang="ja">進行中</span></span><span className="val">super powers for biological progress</span></div>
                 <div className="row"><span className="label">Stack <span lang="ja">技術</span></span><span className="val">Claude Code · Codex · Gemini · Grok · Muse</span></div>
-                <div className="row"><span className="label">Links <span lang="ja">リンク</span></span><span className="val"><a href={`https://github.com/${GITHUB_USER}`} target="_blank" rel="noopener noreferrer">GitHub</a> · <a href="https://huggingface.co/JacobMolBio" target="_blank" rel="noopener noreferrer">Hugging Face</a> · <a href="https://x.com/jacobmolbio" target="_blank" rel="noopener noreferrer">X</a></span></div>
               </div>
             </div>
             <div className="hero-avatar-wrap">
@@ -576,11 +586,29 @@ function App() {
           </div>
         </div>
 
-        <div className="grid">
-          {(projects || []).map((p, i) => (
-            <ProjectCard key={p.name} project={p} index={i} />
-          ))}
-        </div>
+        {groupProjects(projects || []).map((g, gi, all) => {
+          const offset = all.slice(0, gi).reduce((n, x) => n + x.projects.length, 0);
+          return (
+            <section key={g.key} className="episode" aria-labelledby={`ep-${g.key}`}>
+              <div className="episode-head">
+                <div className="episode-num" lang="ja">第{EPISODE_NUMERALS[gi] || gi + 1}話</div>
+                <div className="episode-row">
+                  <h3 className="episode-title" id={`ep-${g.key}`}>
+                    <span>{g.title}</span>
+                    <span className="jp" lang="ja">{g.jp}</span>
+                  </h3>
+                  <div className="episode-meta">Episode {String(gi + 1).padStart(2, "0")} · {g.projects.length} repos</div>
+                </div>
+                <p className="episode-blurb">{g.blurb}</p>
+              </div>
+              <div className="grid">
+                {g.projects.map((p, i) => (
+                  <ProjectCard key={p.name} project={p} index={offset + i} />
+                ))}
+              </div>
+            </section>
+          );
+        })}
 
         <footer className="footer">
           <div>© {readBuildYear()} · Jacob Vogan</div>

@@ -16,7 +16,7 @@
 
   <style>
     :root {
-      --bg: #F6F6F4;
+      --bg: #F3F4F5;
       --paper: #FFFFFF;
       --ink: #111111;
       --ink-2: #333333;
@@ -213,6 +213,17 @@
 
     @media (max-width: 640px) {
       .card { padding: 32px 28px; }
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0A0A0A;
+        --paper: #131313;
+        --ink: #F4F4F2;
+        --ink-2: #C9C9C6;
+        --ink-3: #8C8C88;
+        --hair: rgba(244, 244, 242, 0.16);
+      }
+      .btn.primary:hover { box-shadow: 4px 4px 0 var(--red); }
     }
   </style>
 </head>
