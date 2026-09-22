@@ -284,7 +284,7 @@ body::before {
 @media (prefers-reduced-motion: reduce) {
   .hero-video video { display: none; }
   .hero-video {
-    background: #0d0d0d url("media/lab-runner-poster.jpg") center/cover no-repeat;
+    background: #0d0d0d url("media/lab-runner-poster.jpg?v=2") center/cover no-repeat;
   }
   .hero-video::after { animation: none; }
 }

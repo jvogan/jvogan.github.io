@@ -44,14 +44,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@800&family=Noto+Sans+JP:wght@400;500;700&family=JetBrains+Mono:wght@400;500&family=Inter+Tight:wght@400&display=swap" rel="stylesheet" />
 
   <!-- Above-the-fold paint hints -->
-  <link rel="preload" as="image" href="media/lab-runner-poster.jpg" media="(min-width: 821px)" />
+  <link rel="preload" as="image" href="media/lab-runner-poster.jpg?v=2" media="(min-width: 821px)" />
   <!-- Version must track SOCIAL_PREVIEW_VERSION in portfolio-v5.jsx, or the
        preload misses the request the app actually makes. -->
   <link rel="preload" as="image" href="media/social-previews/small-molecules.webp?v=17" type="image/webp" />
 
   <!-- Restore the reader's light/dark choice before the first paint. -->
   <script>(function(){try{if(localStorage.getItem("theme")==="light"){document.documentElement.setAttribute("data-theme","light");var m=document.querySelector('meta[name="theme-color"]');if(m)m.setAttribute("content","#F3F4F5");}}catch(e){}})();</script>
-  <link rel="stylesheet" href="portfolio-v5.css?v=25" />
+  <link rel="stylesheet" href="portfolio-v5.css?v=26" />
 
   <!-- React 18.3.1 UMD builds, served from this repo. build.sh refreshes these
        from node_modules, so they track the versions pinned in package.json.
@@ -115,6 +115,6 @@
     <!--prerender:end-->
 
   <script defer src="tweaks-stub.js?v=16"></script>
-  <script defer src="portfolio-v5.js?v=25"></script>
+  <script defer src="portfolio-v5.js?v=26"></script>
 </body>
 </html>

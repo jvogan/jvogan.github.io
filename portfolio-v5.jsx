@@ -523,8 +523,8 @@ function App() {
                   aria-label="Pixel-art loop: Jacob and his AI agents — Claude as a crab, Codex as a drone — fighting off pathogens, disease, and monstrous threats inside a research lab."
                 >
                   <video
-                    src="media/lab-runner.mp4"
-                    poster="media/lab-runner-poster.jpg"
+                    src="media/lab-runner.mp4?v=2"
+                    poster="media/lab-runner-poster.jpg?v=2"
                     autoPlay
                     loop
                     muted
