@@ -7,7 +7,7 @@ const GITHUB_USER = "jvogan";
 // Different prefixes get their own CDN cache buckets, so we avoid the rate
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
-const SOCIAL_PREVIEW_VERSION = "17";
+const SOCIAL_PREVIEW_VERSION = "18";
 const FEATURED_PROJECTS = [
   "structure-factory",
   "motif",
