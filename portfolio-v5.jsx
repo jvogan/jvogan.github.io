@@ -7,10 +7,11 @@ const GITHUB_USER = "jvogan";
 // Different prefixes get their own CDN cache buckets, so we avoid the rate
 // limits that hit shared prefixes like "1".
 const OG_PREFIX = `${GITHUB_USER}-portfolio`;
-const SOCIAL_PREVIEW_VERSION = "18";
+const SOCIAL_PREVIEW_VERSION = "19";
 const FEATURED_PROJECTS = [
   "structure-factory",
   "motif",
+  "claude-binder-lane",
   "codex-surface-atlas",
   "codex-binder-lane",
   "a-fable-of-codexes",
@@ -27,7 +28,7 @@ const PROJECT_GROUPS = [
     title: "BioTools",
     jp: "生命",
     blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["motif", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
+    repos: ["motif", "claude-binder-lane", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
   },
   {
     key: "biosymphony",
@@ -140,6 +141,11 @@ const FALLBACK_DETAILS = {
     displayName: "BioVoice",
     blurb: "Talk to your protein structures. Voice control for PyMOL, ChimeraX, AlphaFold, and Rosetta on the OpenAI Realtime API.",
     tags: ["TypeScript", "alphafold", "molecular-visualization"],
+  },
+  "claude-binder-lane": {
+    displayName: "Claude Binder Lane",
+    blurb: "Design protein binders in Claude Science with the workflow from Anthropic's protein design study. Name a target and a budget, approve the plan, and get ranked candidates and predicted structures.",
+    tags: ["Python", "binder-design", "claude-science"],
   },
   "codex-binder-lane": {
     displayName: "Codex Binder Lane",
