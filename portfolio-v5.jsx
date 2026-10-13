@@ -12,6 +12,7 @@ const FEATURED_PROJECTS = [
   "structure-factory",
   "motif",
   "claude-binder-lane",
+  "stereofold",
   "codex-surface-atlas",
   "codex-binder-lane",
   "a-fable-of-codexes",
@@ -28,7 +29,7 @@ const PROJECT_GROUPS = [
     title: "BioTools",
     jp: "生命",
     blurb: "Bioinformatics, structural biology, lab tooling",
-    repos: ["motif", "claude-binder-lane", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
+    repos: ["motif", "claude-binder-lane", "stereofold", "codex-surface-atlas", "codex-binder-lane", "biovoice", "proteus"],
   },
   {
     key: "biosymphony",
@@ -146,6 +147,11 @@ const FALLBACK_DETAILS = {
     displayName: "Claude Binder Lane",
     blurb: "Design protein binders in Claude Science with the workflow from Anthropic's protein design study. Name a target and a budget, approve the plan, and get ranked candidates and predicted structures.",
     tags: ["Python", "binder-design", "claude-science"],
+  },
+  "stereofold": {
+    displayName: "Stereofold",
+    blurb: "View your biological structures in interactive VR with Claude and Codex. Ask for a change by voice or text, and the agent cuts the protein open, colors a chain, or loads the next structure while you watch.",
+    tags: ["TypeScript", "webxr", "molecular-visualization"],
   },
   "codex-binder-lane": {
     displayName: "Codex Binder Lane",
