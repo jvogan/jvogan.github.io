@@ -88,7 +88,7 @@ const FALLBACK_DETAILS = {
   },
   "vibethinker-3b-jlens": {
     displayName: "VibeThinker-3B J Lens",
-    blurb: "A Jacobian lens for VibeThinker-3B: view ranked token predictions across model layers.",
+    blurb: "Explore VibeThinker-3B layer by layer with a Jacobian lens and an interactive viewer of saved model traces.",
     tags: ["interpretability", "jacobian-lens", "VibeThinker-3B"],
     previewImage: "media/social-previews/vibethinker-3b-jlens.png",
   },

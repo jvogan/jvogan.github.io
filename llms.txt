@@ -48,4 +48,4 @@ The aim is to speed the pace of research so people can live healthier, longer li
 ## Research
 
 - [model-steering](https://github.com/jvogan/model-steering): Model steering recipes, personalities, and examples, including Golden Gate Bridge Glimmer. Includes Qwen and Muse Glimmer recipes with recorded examples.
-- [vibethinker-3b-jlens](https://github.com/jvogan/vibethinker-3b-jlens): Jacobian lens for VibeThinker-3B: decode activations from layers into ranked token lists. Weights and traces on Hugging Face.
+- [vibethinker-3b-jlens](https://github.com/jvogan/vibethinker-3b-jlens): Explore VibeThinker-3B layer by layer with a Jacobian lens and an interactive viewer of saved model traces.
