@@ -19,6 +19,7 @@ const FEATURED_PROJECTS = [
   "small-molecules",
   "genecluster",
   "ox-driver",
+  "model-steering",
 ];
 
 // Featured repos by category. Order here controls section order on the page.
@@ -66,12 +67,31 @@ const PROJECT_GROUPS = [
     blurb: "Agent skills, local speech, dev infra",
     repos: ["ai-chatbot-daneel", "Valar", "whisper-hud", "yt-agent"],
   },
+  {
+    key: "research",
+    title: "Research",
+    jp: "研究",
+    blurb: "Model steering and interpretability",
+    repos: ["model-steering", "vibethinker-3b-jlens"],
+  },
 ];
 
 // Hand-curated project copy keeps the public page clear even when the GitHub
 // API is reachable. Live API data still supplies href, owner, and timestamps.
 // Optional `owner` overrides the default `jvogan` owner for cross-org repos.
 const FALLBACK_DETAILS = {
+  "model-steering": {
+    displayName: "Model Steering",
+    blurb: "Model steering recipes, personalities, and examples, including Golden Gate Bridge Glimmer.",
+    tags: ["model-steering", "Qwen", "Muse Glimmer"],
+    previewImage: "media/social-previews/model-steering.jpg",
+  },
+  "vibethinker-3b-jlens": {
+    displayName: "VibeThinker-3B J Lens",
+    blurb: "A Jacobian lens for VibeThinker-3B: view ranked token predictions across model layers.",
+    tags: ["interpretability", "jacobian-lens", "VibeThinker-3B"],
+    previewImage: "media/social-previews/vibethinker-3b-jlens.png",
+  },
   "ox-driver": {
     displayName: "Ox Driver",
     blurb: "Let your main coding agent assign work to independent agent harnesses like Pi, OpenCode, OMP, and more.",
